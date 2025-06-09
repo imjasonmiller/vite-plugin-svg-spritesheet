@@ -3,37 +3,39 @@
 ## Framework components
 
 <details>
-    <summary>Vue</summary>
+  <summary>Vue</summary>
 
-    **Icon.vue**
-    ```vue
-    <template>
-        <div>
-            <svg class="icon" viewBox="0 0 24 24">
-                <use :xlink:href="spriteUrl"></use>
-            </svg>
-        </div>
-    </template>
+  **Icon.vue**
 
-    <script setup lang="ts">
-      import { computed } from "vue";
-      import spritesheetUrl from "./../assets/spritesheet.svg?url";
+```vue
+<template>
+  <div>
+    <svg class="icon" viewBox="0 0 24 24">
+      <use :xlink:href="spriteUrl"></use>
+    </svg>
+  </div>
+</template>
 
-      import type { IconName } from "./../generated/icons";
+<script setup lang="ts">
+import { computed } from "vue";
+import spritesheetUrl from "./../assets/spritesheet.svg?url";
 
-      interface IconProps {
-        name: IconName;
-      }
+import type { IconName } from "./../generated/icons";
 
-      const { name } = defineProps<IconProps>();
+interface IconProps {
+  name: IconName;
+}
 
-      const spriteUrl = computed(() => `${spritesheetUrl}#${name}`);
-    </script>
-    ```
-    It can then be used like below:
-    ```vue
-    <template>
-        <Icon name="icon-md-general-edit" />
-    </template>
-    ```
+const { name } = defineProps<IconProps>();
+
+const spriteUrl = computed(() => `${spritesheetUrl}#${name}`);
+</script>
+```
+It can then be used like below:
+
+```vue
+<template>
+  <Icon name="icon-md-general-edit" />
+</template>
+```
 </details>
