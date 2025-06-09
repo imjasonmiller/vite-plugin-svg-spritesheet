@@ -1,0 +1,41 @@
+{
+  "name": "vite-plugin-svg-spritesheet",
+  "version": "0.0.0",
+  "description": "Vite plugin for SVG spritesheets with SVGO",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [
+    "vite",
+    "plugin",
+    "vite-plugin",
+    "spritesheet",
+    "svg",
+    "svgo"
+  ],
+  "author": "Jason Miiller <contact@jasonmiller.nl>",
+  "license": "MIT",
+  "devDependencies": {
+    "@microsoft/api-extractor": "^7.52.8",
+    "@types/node": "^22.15.30",
+    "typescript": "^5.8.3",
+    "unplugin-dts": "^1.0.0-beta.0"
+  },
+  "peerDependencies": {
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "svgo": "^3.3.2",
+    "fast-xml-parser": "^5.2.4",
+    "tinyglobby": "^0.2.14"
+  }
+}
