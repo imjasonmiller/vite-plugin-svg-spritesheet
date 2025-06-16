@@ -1,0 +1,76 @@
+import fs from "fs/promises";
+import { toEnumKey, toEnumValue } from "./utils";
+import { GENERATED_FILE_HEADER } from "./constants";
+
+import type { SpriteMap, SvgSpritesheetPluginContext } from "./types";
+
+/**
+ * Generate a TypeScript union type for sprite names
+ *
+ * @param name - The type's name, defaults to `IconName`
+ * @returns - String content of the type declaration
+ */
+export function generateTypeDeclaration(name: string = "IconName") {
+  return (spriteMap: SpriteMap): string => {
+    const members = Array.from(spriteMap.values(), ({ spriteId }) => {
+      return `  | "${spriteId}"`;
+    }).join("\n");
+
+    return `${GENERATED_FILE_HEADER}\n\nexport type ${name} =\n${members};`;
+  };
+}
+
+/**
+ * Generate a TypeScript enum for sprite names
+ *
+ * @param name - The enum's name, defaults to `IconName`
+ * @returns - String content of the enum declaration
+ */
+export function generateEnumDeclaration(name: string = "IconName") {
+  return (spriteMap: SpriteMap): string => {
+    const members = Array.from(spriteMap.keys(), (key) => {
+      const enumKey = toEnumKey(key);
+      const enumValue = toEnumValue(key);
+      return `  ${enumKey} = "${enumValue}"`;
+    }).join(",\n");
+
+    return `${GENERATED_FILE_HEADER}\n\nexport enum ${name} {\n${members},\n}`;
+  };
+}
+
+export function buildSpritesheet(spriteMap: SpriteMap): string {
+  const symbols = Array.from(
+    spriteMap.values(),
+    ({ spriteString }) => spriteString,
+  ).join("");
+
+  return `<svg xmlns="http://www.w3.org/2000/svg">${symbols}</svg>`;
+}
+
+export async function writeSpritesheet({
+  spriteMap,
+  options,
+  logger,
+}: SvgSpritesheetPluginContext): Promise<void> {
+  const spritesheetSvg = buildSpritesheet(spriteMap);
+
+  try {
+    await fs.writeFile(options.output, spritesheetSvg, "utf8");
+  } catch {
+    logger.error(`Failed to write spritesheet to "${options.output}"`);
+  }
+
+  // If defined, generate TypeScript types
+  if (options.types) {
+    const clonedSpriteMap = structuredClone(spriteMap);
+    const declaration = options.types.generateDeclaration
+      ? options.types.generateDeclaration(clonedSpriteMap)
+      : generateEnumDeclaration()(clonedSpriteMap);
+
+    try {
+      await fs.writeFile(options.types.output, declaration, "utf8");
+    } catch {
+      logger.warn(`Failed to write types to "${options.types.output}"`);
+    }
+  }
+}

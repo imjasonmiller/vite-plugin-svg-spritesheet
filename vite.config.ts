@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import { builtinModules } from "module";
 import dts from "unplugin-dts/vite";
@@ -20,4 +21,9 @@ export default defineConfig({
     },
   },
   plugins: [dts({ bundleTypes: true })],
+  test: {
+    coverage: {
+      provider: "v8",
+    },
+  },
 });
