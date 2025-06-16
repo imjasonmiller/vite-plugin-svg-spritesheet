@@ -1,4 +1,7 @@
-# `vite-plugin-svg-spritesheet`
+# `vite-plugin-svg-spritesheet 👨🏽‍🎨`
+
+A Vite plugin that enables you to generate SVG spritesheets along with SVGO
+optimization and TypeScript type generation.
 
 ## Framework components
 
