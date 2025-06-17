@@ -177,6 +177,7 @@ export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
   const xmlParser = new XMLParser(xmlOptions);
   const xmlBuilder = new XMLBuilder(xmlOptions);
   const context: SvgSpritesheetPluginContext = {
+    logger: console,
     options,
     spriteMap,
     xmlParser,
