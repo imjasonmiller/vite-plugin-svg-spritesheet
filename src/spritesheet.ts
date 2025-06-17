@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import { toEnumKey, toEnumValue } from "./utils";
+import { toEnumKey, toEnumValue } from "./helpers/naming";
 import { GENERATED_FILE_HEADER } from "./constants";
 
 import type { SpriteMap, SvgSpritesheetPluginContext } from "./types";
