@@ -49,11 +49,6 @@ export interface SpriteMapEntry {
   hash: string;
 }
 
-export interface SvgSpritesheetInclude {
-  pattern: string | Array<string>;
-  baseDir?: string;
-}
-
 interface SpritesheetTypesOptions {
   output: string;
   /**
@@ -64,7 +59,7 @@ interface SpritesheetTypesOptions {
 }
 
 export interface SvgSpritesheetPluginOptions {
-  include: Array<SvgSpritesheetInclude>;
+  include: string | Array<string>;
   output: string;
   /**
    * A custom `id` to be used as for each `<symbol />`.
@@ -77,13 +72,13 @@ export interface SvgSpritesheetPluginOptions {
 
 export interface ProcessSvgParams {
   context: SvgSpritesheetPluginContext;
-  include: SvgSpritesheetInclude;
+  include: string;
   layerIndex: number;
   filePath: string;
 }
 
 export interface IncludeMatcher {
   matcher: Matcher;
-  include: SvgSpritesheetInclude;
+  include: string;
   layerIndex: number;
 }
