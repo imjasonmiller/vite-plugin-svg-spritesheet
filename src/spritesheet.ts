@@ -47,12 +47,24 @@ export function buildSpritesheet(spriteMap: SpriteMap): string {
   return `<svg xmlns="http://www.w3.org/2000/svg">${symbols}</svg>`;
 }
 
+export function sortMap<K, V>(
+  map: Map<K, V>,
+  compareFn?: (a: [K, V], b: [K, V]) => number,
+): Map<K, V> {
+  return new Map(Array.from(map.entries()).sort(compareFn));
+}
+
 export async function writeSpritesheet({
   spriteMap,
   options,
   logger,
 }: SvgSpritesheetPluginContext): Promise<void> {
-  const spritesheetSvg = buildSpritesheet(spriteMap);
+  // Sort map in order for the output to be deterministic
+  const sortedSpriteMap = sortMap(spriteMap, ([, entryA], [, entryB]) => {
+    return entryA.spriteId.localeCompare(entryB.spriteId);
+  });
+
+  const spritesheetSvg = buildSpritesheet(sortedSpriteMap);
 
   try {
     await fs.writeFile(options.output, spritesheetSvg, "utf8");
@@ -62,7 +74,8 @@ export async function writeSpritesheet({
 
   // If defined, generate TypeScript types
   if (options.types) {
-    const clonedSpriteMap = structuredClone(spriteMap);
+    // Clone to avoid the user from mutating the data structure
+    const clonedSpriteMap = structuredClone(sortedSpriteMap);
     const declaration = options.types.generateDeclaration
       ? options.types.generateDeclaration(clonedSpriteMap)
       : generateEnumDeclaration()(clonedSpriteMap);

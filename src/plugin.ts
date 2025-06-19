@@ -25,6 +25,7 @@ import type {
 
 import { LOG_PLUGIN_NAME, DEFAULT_BATCH_SIZE } from "./constants";
 import { normalizeError } from "./helpers/error";
+import { cwd } from "process";
 
 /**
  * Generate a default `id` attribute value for the `<symbol />` from path parts
@@ -73,20 +74,24 @@ function isProcessingSkipped(
  */
 async function processSvg({
   context,
-  filePath,
+  filePath, // rename to `entry`
   include,
   layerIndex,
 }: ProcessSvgParams): Promise<void> {
   try {
-    const file = await fs.readFile(filePath, "utf8");
+    const absoluteInclude = path.resolve(include);
+    const absoluteFilePath = path.resolve(absoluteInclude, filePath);
+    const relativeToInclude = path.relative(absoluteInclude, absoluteFilePath);
+    const parsedRelativePath = path.parse(relativeToInclude);
+
+    const file = await fs.readFile(absoluteFilePath, "utf8");
     // The hash is used to compare the contents of SVG files, with MD5 chosen
     // for speed and sufficiently low collision risk in this context.
     // It is not intended for cryptographic security.
     const hash = createHash("md5").update(file).digest("hex");
-    const parsedPath = resolveBasePath(context, filePath, include.baseDir);
     const spriteId = context.options.customSymbolId
-      ? context.options.customSymbolId(parsedPath)
-      : defaultSymbolId(parsedPath);
+      ? context.options.customSymbolId(parsedRelativePath)
+      : defaultSymbolId(parsedRelativePath);
 
     const existingEntry = context.spriteMap.get(spriteId);
     if (isProcessingSkipped(context, existingEntry, hash, layerIndex)) {
@@ -190,14 +195,33 @@ export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
     async buildStart() {
       context.logger = this;
 
-      for (const [layerIndex, include] of options.include.entries()) {
+      const normalizedIncludes = Array.isArray(options.include)
+        ? options.include
+        : [options.include];
+
+      const resolvedInlcudes: Array<string> = [];
+
+      for (const include of normalizedIncludes) {
+        const resolved = path.resolve(include);
+
+        const stats = await fs.stat(resolved).catch(() => null);
+        if (!stats?.isDirectory()) {
+          this.error(`The include "${include}" is not a valid directory`);
+        }
+
+        resolvedInlcudes.push(include);
+      }
+
+      for (const [layerIndex, include] of resolvedInlcudes.entries()) {
         let entries: string[] = [];
         try {
-          entries = await glob(include.pattern);
+          entries = await glob("**/*.svg", {
+            cwd: include,
+          });
         } catch (error) {
           const normalizedError = normalizeError(error);
           this.error({
-            message: `Failed to glob files for pattern "${include.pattern}": ${normalizedError.message}`,
+            message: `Failed to glob files for include "${include}": ${normalizedError.message}`,
           });
         }
 
@@ -239,19 +263,32 @@ export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
     // See: https://vite.dev/config/server-options#server-watch
     configureServer(server) {
       // Precompile and cache all matchers
-      const matchers = options.include.flatMap((include) => {
-        // Normalize patterns to `Array` to make them iterable, as their type
-        // can be `string | Array<string>`.
-        const normalizedPatterns = Array.isArray(include.pattern)
-          ? include.pattern
-          : [include.pattern];
+      const matchers = (
+        Array.isArray(options.include) ? options.include : [options.include]
+      ).map((include, index) => {
+        const resolved = path.resolve(include);
 
-        return normalizedPatterns.map((pattern) => ({
-          matcher: picomatch(path.relative(process.cwd(), pattern)),
+        return {
+          matcher: picomatch("**/*.svg", { cwd: resolved }),
           include,
-          layerIndex: options.include.indexOf(include),
-        }));
+          layerIndex: index,
+        };
       });
+
+      // const matchers = options.include.flatMap((include) => {
+      //   // Normalize patterns to `Array` to make them iterable, as their type
+      //   // can be `string | Array<string>`.
+
+      //   picomatch("**/*.svg", {
+      //     cwd: include,
+      //   });
+
+      //   return normalizedPatterns.map((pattern) => ({
+      //     matcher: picomatch(path.relative(process.cwd(), pattern)),
+      //     include,
+      //     layerIndex: options.include.indexOf(include),
+      //   }));
+      // });
 
       server.watcher.on("add", async (file) => {
         await handleFileEvent(context, "add", file, matchers);

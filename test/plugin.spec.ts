@@ -23,10 +23,7 @@ describe("svgSpritesheet plugin (integration)", () => {
   });
 
   it("generates a spritesheet from fixture SVGs", async () => {
-    console.log("tempDir:", tempDir);
-
     const spritePath = path.join(tempDir, "spritesheet.svg");
-    console.log("spritePath:", spritePath);
 
     await build({
       build: {
@@ -34,12 +31,7 @@ describe("svgSpritesheet plugin (integration)", () => {
       },
       plugins: [
         svgSpritesheet({
-          include: [
-            {
-              pattern: path.join(fixturesDir, "**/*.svg"),
-              baseDir: fixturesDir,
-            },
-          ],
+          include: fixturesDir,
           output: spritePath,
         }),
       ],
@@ -61,6 +53,6 @@ describe("svgSpritesheet plugin (integration)", () => {
     expect(content).toContain("icon-a");
     expect(content).toContain("icon-b");
     expect(content).toContain("icon-c");
-    expect(content).toContain("icon-d");
+    expect(content).toContain("nested-icon-d");
   });
 });
