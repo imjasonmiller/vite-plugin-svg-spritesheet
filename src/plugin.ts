@@ -9,7 +9,6 @@ import {
   optimizeSvg,
   cleanSymbolAttributes,
 } from "./helpers/parsing";
-import { resolveBasePath } from "./helpers/file";
 import { writeSpritesheet } from "./spritesheet";
 
 import type { ParsedPath } from "path";
@@ -25,7 +24,6 @@ import type {
 
 import { LOG_PLUGIN_NAME, DEFAULT_BATCH_SIZE } from "./constants";
 import { normalizeError } from "./helpers/error";
-import { cwd } from "process";
 
 /**
  * Generate a default `id` attribute value for the `<symbol />` from path parts
@@ -93,7 +91,7 @@ async function processSvg({
       ? context.options.customSymbolId(parsedRelativePath)
       : defaultSymbolId(parsedRelativePath);
 
-    const existingEntry = context.spriteMap.get(spriteId);
+    const existingEntry = context.spriteMap.get(relativeToInclude);
     if (isProcessingSkipped(context, existingEntry, hash, layerIndex)) {
       return;
     }
@@ -109,7 +107,7 @@ async function processSvg({
 
     const symbolAttrs = cleanSymbolAttributes(svgObj, spriteId);
     const spriteString = context.xmlBuilder.build({ symbol: symbolAttrs });
-    context.spriteMap.set(spriteId, {
+    context.spriteMap.set(relativeToInclude, {
       spriteId,
       spriteString,
       layerIndex,
@@ -129,10 +127,8 @@ async function handleFileEvent(
   file: string,
   matchers: Array<IncludeMatcher>,
 ): Promise<void> {
-  const relativePath = path.relative(process.cwd(), file);
-
   for (const { matcher, include, layerIndex } of matchers) {
-    if (matcher(relativePath)) {
+    if (matcher(file)) {
       switch (event) {
         case "add":
         case "change": {
@@ -140,12 +136,12 @@ async function handleFileEvent(
             context,
             include,
             layerIndex,
-            filePath: relativePath,
+            filePath: file,
           });
           break;
         }
         case "unlink":
-          context.spriteMap.delete(relativePath);
+          context.spriteMap.delete(path.relative(include, file));
           break;
         default:
           context.logger.warn(
@@ -266,41 +262,25 @@ export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
       const matchers = (
         Array.isArray(options.include) ? options.include : [options.include]
       ).map((include, index) => {
-        const resolved = path.resolve(include);
+        const pattern = path.resolve(path.join(include, "**/*.svg"));
 
         return {
-          matcher: picomatch("**/*.svg", { cwd: resolved }),
+          matcher: picomatch(pattern),
           include,
           layerIndex: index,
         };
       });
 
-      // const matchers = options.include.flatMap((include) => {
-      //   // Normalize patterns to `Array` to make them iterable, as their type
-      //   // can be `string | Array<string>`.
-
-      //   picomatch("**/*.svg", {
-      //     cwd: include,
-      //   });
-
-      //   return normalizedPatterns.map((pattern) => ({
-      //     matcher: picomatch(path.relative(process.cwd(), pattern)),
-      //     include,
-      //     layerIndex: options.include.indexOf(include),
-      //   }));
-      // });
-
-      server.watcher.on("add", async (file) => {
-        await handleFileEvent(context, "add", file, matchers);
-      });
-
-      server.watcher.on("change", async (file) => {
-        await handleFileEvent(context, "change", file, matchers);
-      });
-
-      server.watcher.on("unlink", async (file) => {
-        await handleFileEvent(context, "unlink", file, matchers);
-      });
+      server.watcher
+        .on("change", async (file) => {
+          await handleFileEvent(context, "change", file, matchers);
+        })
+        .on("add", async (file) => {
+          await handleFileEvent(context, "add", file, matchers);
+        })
+        .on("unlink", async (file) => {
+          await handleFileEvent(context, "unlink", file, matchers);
+        });
     },
   };
 }
