@@ -10,7 +10,7 @@ import {
   cleanSymbolAttributes,
 } from "./helpers/parsing";
 import { debounce } from "./helpers/debounce";
-import { writeSpritesheet } from "./spritesheet";
+import { writeSpritesheet } from "./helpers/spritesheet";
 
 import type { ParsedPath } from "path";
 import type { Plugin } from "vite";

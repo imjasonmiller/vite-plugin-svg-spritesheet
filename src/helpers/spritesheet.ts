@@ -1,8 +1,8 @@
 import fs from "fs/promises";
-import { toEnumKey, toEnumValue } from "./helpers/naming";
-import { GENERATED_FILE_HEADER } from "./constants";
+import { toEnumKey, toEnumValue } from "./naming";
+import { GENERATED_FILE_HEADER } from "../constants";
 
-import type { SpriteMap, SvgSpritesheetPluginContext } from "./types";
+import type { SpriteMap, SvgSpritesheetPluginContext } from "../types";
 
 /**
  * Generate a TypeScript union type for sprite names
