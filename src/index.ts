@@ -2,6 +2,6 @@ export { svgSpritesheet } from "./plugin";
 export {
   generateEnumDeclaration,
   generateTypeDeclaration,
-} from "./spritesheet";
+} from "./helpers/spritesheet";
 
 export type { SvgSpritesheetPluginOptions } from "./types";
