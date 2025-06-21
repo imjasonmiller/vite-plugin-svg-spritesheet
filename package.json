@@ -27,6 +27,7 @@
   "author": "Jason Miiller <contact@jasonmiller.nl>",
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
     "@microsoft/api-extractor": "^7.52.8",
     "@types/node": "^22.15.30",
     "@types/picomatch": "^4.0.0",
