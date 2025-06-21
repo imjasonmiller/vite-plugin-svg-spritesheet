@@ -9,6 +9,7 @@ import {
   optimizeSvg,
   cleanSymbolAttributes,
 } from "./helpers/parsing";
+import { debounce } from "./helpers/debounce";
 import { writeSpritesheet } from "./spritesheet";
 
 import type { ParsedPath } from "path";
@@ -83,9 +84,9 @@ async function processSvg({
     const parsedRelativePath = path.parse(relativeToInclude);
 
     const file = await fs.readFile(absoluteFilePath, "utf8");
-    // The hash is used to compare the contents of SVG files, with MD5 chosen
-    // for speed and sufficiently low collision risk in this context.
-    // It is not intended for cryptographic security.
+    // Hash file contents for comparison. MD5 is chosen for speed and
+    // sufficiently low collision risk in this context. It is not intended for
+    // cryptographic security.
     const hash = createHash("md5").update(file).digest("hex");
     const spriteId = context.options.customSymbolId
       ? context.options.customSymbolId(parsedRelativePath)
@@ -121,6 +122,14 @@ async function processSvg({
   }
 }
 
+const debouncedWriteSpriteSheet = debounce(
+  async (args: SvgSpritesheetPluginContext) => {
+    await writeSpritesheet(args);
+  },
+  1500,
+  { leading: true, trailing: true },
+);
+
 async function handleFileEvent(
   context: SvgSpritesheetPluginContext,
   event: "add" | "change" | "unlink",
@@ -150,7 +159,7 @@ async function handleFileEvent(
           break;
       }
 
-      await writeSpritesheet(context);
+      debouncedWriteSpriteSheet(context);
     }
   }
 }
@@ -244,7 +253,7 @@ export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
       if (spriteMap.size === 0) {
         this.warn("No sprites were generated");
       } else {
-        this.info(`Generated ${spriteMap.size} SVG sprites`);
+        this.info(`${LOG_PLUGIN_NAME} Generated ${spriteMap.size} SVG sprites`);
       }
     },
 
