@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.2.3
+
+### Patch Changes
+
+- 72456c2: Update `access` field to `public` for changesets
+
 ## 0.2.2
 
 ### Patch Changes
