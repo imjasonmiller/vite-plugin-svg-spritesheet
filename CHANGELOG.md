@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.2.6
+
+### Patch Changes
+
+- 7015714: Separate TypeScript exports for CJS and EJS
+
 ## 0.2.5
 
 ### Patch Changes
