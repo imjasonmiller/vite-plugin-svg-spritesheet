@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.2.4
+
+### Patch Changes
+
+- 90e51b6: Update `esm` and `cjs` exports
+
 ## 0.2.3
 
 ### Patch Changes
