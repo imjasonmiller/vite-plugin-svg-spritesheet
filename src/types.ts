@@ -59,14 +59,33 @@ interface SpritesheetTypesOptions {
 }
 
 export interface SvgSpritesheetPluginOptions {
+  /**
+   * Directory or directories to include icons from.
+   * Accepts a single path or array of paths.
+   */
   include: string | Array<string>;
+  /**
+   * Path to which the generated spritesheet will be written.
+   */
   output: string;
   /**
-   * A custom `id` to be used as for each `<symbol />`.
+   * A custom `id` attribute to be used as for each `<symbol />` tag.
+   * Receives the parsed file path as input.
    */
   customSymbolId?: (path: ParsedPath) => string;
+  /**
+   * Optional SVGO configuration object for optimization of SVGs.
+   * @default undefined
+   */
   svgoConfig?: SvgoConfig;
+  /**
+   * Optional TypeScript types generation settings.
+   */
   types?: SpritesheetTypesOptions;
+  /**
+   * Number of files to process in parallel batches.
+   * @default 20
+   */
   batchSize?: number;
 }
 
