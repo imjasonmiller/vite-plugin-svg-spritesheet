@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.2.5
+
+### Patch Changes
+
+- f7b1026: Add missing package `exports` field
+
 ## 0.2.4
 
 ### Patch Changes
