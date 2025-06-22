@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.2.7
+
+### Patch Changes
+
+- 66b885c: Improve IDE experience for PluginOptions by adding comments
+
 ## 0.2.6
 
 ### Patch Changes
