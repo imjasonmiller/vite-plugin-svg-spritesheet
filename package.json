@@ -8,7 +8,6 @@
     "type": "module",
     "files": [
         "dist",
-        "src",
         "README.md",
         "LICENSE"
     ],
@@ -17,7 +16,8 @@
         "test": "vitest",
         "prepare": "husky",
         "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "format:check": "prettier --check .",
+        "release": "vite build && changeset publish"
     },
     "lint-staged": {
         "**/*": "prettier --write --ignore-unknown"
