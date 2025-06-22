@@ -1,9 +1,9 @@
-const unicodeNonAlphaNumeric = /[^\p{L}\p{N}]+/gu
-const unicodeCamelCaseBoundary = /([\p{Ll}\p{N}])(\p{Lu})/gu
-const unicodeLetterDigitBoundary = /([\p{L}])([\p{N}])/gu
-const unicodeDigitLetterBoundary = /([\p{N}])([\p{L}])/gu
-const leadingTrailingHyphens = /^-+|-+$/g
-const leadingTrailingUnderscores = /^_+|_+$/g
+const unicodeNonAlphaNumeric = /[^\p{L}\p{N}]+/gu;
+const unicodeCamelCaseBoundary = /([\p{Ll}\p{N}])(\p{Lu})/gu;
+const unicodeLetterDigitBoundary = /([\p{L}])([\p{N}])/gu;
+const unicodeDigitLetterBoundary = /([\p{N}])([\p{L}])/gu;
+const leadingTrailingHyphens = /^-+|-+$/g;
+const leadingTrailingUnderscores = /^_+|_+$/g;
 
 /**
  * Converts an input string into UPPER_SNAKE_CASE
@@ -20,11 +20,11 @@ const leadingTrailingUnderscores = /^_+|_+$/g
  * toUpperSnakeCase("crème brûlée") // "CRÈME_BRÛLÉE"
  */
 function toUpperSnakeCase(input: string): string {
-    return input
-        .normalize('NFC')
-        .toUpperCase()
-        .replace(unicodeNonAlphaNumeric, '_') // Replace non-word characters with underscores
-        .replace(leadingTrailingUnderscores, '') // Trim leading and trailing underscores
+  return input
+    .normalize('NFC')
+    .toUpperCase()
+    .replace(unicodeNonAlphaNumeric, '_') // Replace non-word characters with underscores
+    .replace(leadingTrailingUnderscores, ''); // Trim leading and trailing underscores
 }
 
 /**
@@ -44,20 +44,20 @@ function toUpperSnakeCase(input: string): string {
  * toKebabCase("example-42") // "example-42"
  */
 function toKebabCase(input: string): string {
-    return (
-        input
-            .normalize('NFC')
-            // Insert a hyphen between camelCase boundaries
-            .replace(unicodeCamelCaseBoundary, '$1-$2')
-            // Insert a hyphen between digit-letter (and vice versa) boundaries
-            .replace(unicodeLetterDigitBoundary, '$1-$2')
-            .replace(unicodeDigitLetterBoundary, '$1-$2')
-            // Replace non-alphanumeric characters with hyphens
-            .replace(unicodeNonAlphaNumeric, '-')
-            // Remove leading and trailing hyphens
-            .replace(leadingTrailingHyphens, '')
-            .toLowerCase()
-    )
+  return (
+    input
+      .normalize('NFC')
+      // Insert a hyphen between camelCase boundaries
+      .replace(unicodeCamelCaseBoundary, '$1-$2')
+      // Insert a hyphen between digit-letter (and vice versa) boundaries
+      .replace(unicodeLetterDigitBoundary, '$1-$2')
+      .replace(unicodeDigitLetterBoundary, '$1-$2')
+      // Replace non-alphanumeric characters with hyphens
+      .replace(unicodeNonAlphaNumeric, '-')
+      // Remove leading and trailing hyphens
+      .replace(leadingTrailingHyphens, '')
+      .toLowerCase()
+  );
 }
 
 /**
@@ -76,19 +76,19 @@ function toKebabCase(input: string): string {
  * toEnumKey("16/example", "icon") // "ICON_16_EXAMPLE"
  */
 export function toEnumKey(input: string, prefix?: string): string {
-    const sanitizedInput = toUpperSnakeCase(input)
-    const sanitizedPrefix = prefix ? toUpperSnakeCase(prefix) : ''
+  const sanitizedInput = toUpperSnakeCase(input);
+  const sanitizedPrefix = prefix ? toUpperSnakeCase(prefix) : '';
 
-    // If both parts are empty after sanitization, return fallback "_"
-    if (!sanitizedInput && !sanitizedPrefix) {
-        return '_'
-    }
+  // If both parts are empty after sanitization, return fallback "_"
+  if (!sanitizedInput && !sanitizedPrefix) {
+    return '_';
+  }
 
-    const combined = [sanitizedPrefix, sanitizedInput]
-        .filter((s) => s.length > 0)
-        .join('_')
+  const combined = [sanitizedPrefix, sanitizedInput]
+    .filter((s) => s.length > 0)
+    .join('_');
 
-    return /^\d/.test(combined) ? `_${combined}` : combined
+  return /^\d/.test(combined) ? `_${combined}` : combined;
 }
 
 /**
@@ -104,15 +104,15 @@ export function toEnumKey(input: string, prefix?: string): string {
  * toEnumValue("16/example", "icon") // "icon-16-example"
  */
 export function toEnumValue(input: string, prefix?: string): string {
-    const sanitizedInput = toKebabCase(input)
-    const sanitizedPrefix = prefix ? toKebabCase(prefix) : ''
+  const sanitizedInput = toKebabCase(input);
+  const sanitizedPrefix = prefix ? toKebabCase(prefix) : '';
 
-    // If both parts are empty after sanitization, return fallback "-"
-    if (!sanitizedInput && !sanitizedPrefix) {
-        return '-'
-    }
+  // If both parts are empty after sanitization, return fallback "-"
+  if (!sanitizedInput && !sanitizedPrefix) {
+    return '-';
+  }
 
-    return [sanitizedPrefix, sanitizedInput]
-        .filter((s) => s.length > 0)
-        .join('-')
+  return [sanitizedPrefix, sanitizedInput]
+    .filter((s) => s.length > 0)
+    .join('-');
 }
