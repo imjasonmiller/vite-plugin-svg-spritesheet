@@ -1,5 +1,12 @@
 # vite-plugin-svg-spritesheet
 
+## 0.2.2
+
+### Patch Changes
+
+- d902c06: Fix bundle emits to match `package.json`
+- d902c06: Update `prettier` formatting
+
 ## 0.2.1
 
 ### Patch Changes
