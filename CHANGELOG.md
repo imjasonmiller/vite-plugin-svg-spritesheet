@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.2.8
+
+### Patch Changes
+
+- 4ef41a2: Add coverage
+
 ## 0.2.7
 
 ### Patch Changes
