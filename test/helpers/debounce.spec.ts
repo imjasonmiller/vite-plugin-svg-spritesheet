@@ -98,7 +98,7 @@ describe('debounce', () => {
 
   it('passes the correct `this` context to the callback', () => {
     const context = { value: 42 };
-    const callback = vi.fn(function () {
+    const callback = vi.fn(function (this: typeof context) {
       // `this` should be the context bound to debounced call
       expect(this).toBe(context);
     });
