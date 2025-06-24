@@ -2,7 +2,7 @@
 
 ![npm version](https://img.shields.io/npm/v/vite-plugin-svg-spritesheet?style=flat) ![Build Status](https://img.shields.io/github/actions/workflow/status/imjasonmiller/vite-plugin-svg-spritesheet/ci.yml?style=flat)
 
-**Fast, scalable, and type-safe SVG spritesheets for Vite**
+**Fast, scalable, and type-safe SVG spritesheets for Vite**\
 Bundle and optimize your SVG icons into a single spritesheet with live updates and TypeScript support.
 
 ## Features
