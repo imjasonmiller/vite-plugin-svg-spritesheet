@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.3.0
+
+### Minor Changes
+
+- 24c026e: Add `replaceColorAttributes` option to allow for `currentColor`
+
 ## 0.2.10
 
 ### Patch Changes
