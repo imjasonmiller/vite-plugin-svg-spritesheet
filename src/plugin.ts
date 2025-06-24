@@ -25,6 +25,7 @@ import type {
 
 import { LOG_PLUGIN_NAME, DEFAULT_BATCH_SIZE } from './constants';
 import { normalizeError } from './helpers/error';
+import { replaceColorAttributes } from './helpers/colorAttributes';
 
 /**
  * Generate a default `id` attribute value for the `<symbol />` from path parts
@@ -104,6 +105,10 @@ async function processSvg({
         `Parsing SVG returned empty or invalid data for file: "${filePath}". Skipping.`
       );
       return;
+    }
+
+    if (context.options.replaceColorAttributes) {
+      replaceColorAttributes(svgObj);
     }
 
     const symbolAttrs = cleanSymbolAttributes(svgObj, spriteId);

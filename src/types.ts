@@ -89,6 +89,11 @@ export interface SvgSpritesheetPluginOptions {
    * @default 20
    */
   batchSize?: number;
+  /**
+   * Replace all `fill` and `stroke` color attributes with CSS Variables that
+   * allows for the use of `currentColor` with fallback to the original color.
+   */
+  replaceColorAttributes?: boolean;
 }
 
 export interface ProcessSvgParams {
