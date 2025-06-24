@@ -10,7 +10,7 @@ import type { SpriteMap, SvgSpritesheetPluginContext } from '../types';
  * @param name - The type's name, defaults to `IconName`
  * @returns - String content of the type declaration
  */
-export function generateTypeDeclaration(name: string = 'IconName') {
+export function generateTypeDeclaration(name = 'IconName') {
   return (spriteMap: SpriteMap): string => {
     const members = Array.from(spriteMap.values(), ({ spriteId }) => {
       return `  | "${spriteId}"`;
@@ -26,7 +26,7 @@ export function generateTypeDeclaration(name: string = 'IconName') {
  * @param name - The enum's name, defaults to `IconName`
  * @returns - String content of the enum declaration
  */
-export function generateEnumDeclaration(name: string = 'IconName') {
+export function generateEnumDeclaration(name = 'IconName') {
   return (spriteMap: SpriteMap): string => {
     const members = Array.from(spriteMap.keys(), (key) => {
       const enumKey = toEnumKey(key);

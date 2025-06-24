@@ -134,7 +134,7 @@ async function handleFileEvent(
   context: SvgSpritesheetPluginContext,
   event: 'add' | 'change' | 'unlink',
   file: string,
-  matchers: Array<IncludeMatcher>
+  matchers: IncludeMatcher[]
 ): Promise<void> {
   for (const { matcher, include, layerIndex } of matchers) {
     if (matcher(file)) {
@@ -204,7 +204,7 @@ export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
         ? options.include
         : [options.include];
 
-      const resolvedInlcudes: Array<string> = [];
+      const resolvedInlcudes: string[] = [];
 
       for (const include of normalizedIncludes) {
         const resolved = path.resolve(include);

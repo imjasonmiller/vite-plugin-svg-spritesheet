@@ -4,6 +4,7 @@ import type {
   ParsedSvg,
   SvgSpriteSymbolAttrs,
 } from './../types';
+import { normalizeError } from './error';
 
 /**
  * Parse SVG XML string and warns on missing required attributes. Returns a
@@ -29,7 +30,10 @@ export function parseSvg(
 
     return result;
   } catch (err) {
-    context.logger.warn(`Failed to parse SVG XML in "${filePath}": ${err}`);
+    const normalizedError = normalizeError(err);
+    context.logger.warn(
+      `Failed to parse SVG XML in "${filePath}": ${normalizedError.message}`
+    );
     return null;
   }
 }
@@ -57,7 +61,10 @@ export function optimizeSvg(
       );
     }
   } catch (err) {
-    context.logger.warn(`SVGO could not optimize the file "${filePath}"`);
+    const normalizedError = normalizeError(err);
+    context.logger.warn(
+      `SVGO could not optimize the file "${filePath}": ${normalizedError.message}`
+    );
   }
 
   return content;
@@ -74,9 +81,9 @@ export function cleanSymbolAttributes(
   };
 
   // Remove unnecessary attributes for the `<symbol />`
-  for (const attr of ['@_xmlns', '@_width', '@_height']) {
-    delete result[attr];
-  }
+  delete result['@_xmlns'];
+  delete result['@_width'];
+  delete result['@_height'];
 
   return result;
 }

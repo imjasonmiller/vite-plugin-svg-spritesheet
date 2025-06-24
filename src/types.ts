@@ -3,11 +3,13 @@ import { type Config as SvgoConfig } from 'svgo';
 import type { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import type { Matcher } from 'picomatch';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Logger {
-  warn: (...args: Array<any>) => any;
-  error: (...args: Array<any>) => any;
-  info: (...args: Array<any>) => any;
+  warn: (...args: any[]) => void;
+  error: (...args: any[]) => void;
+  info: (...args: any[]) => void;
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export interface SvgSpritesheetPluginContext {
   logger: Logger;
@@ -63,7 +65,7 @@ export interface SvgSpritesheetPluginOptions {
    * Directory or directories to include icons from.
    * Accepts a single path or array of paths.
    */
-  include: string | Array<string>;
+  include: string | string[];
   /**
    * Path to which the generated spritesheet will be written.
    */

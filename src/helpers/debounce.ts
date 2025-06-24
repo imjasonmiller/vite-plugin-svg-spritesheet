@@ -13,7 +13,8 @@ interface DebounceOptions {
  * @param options - Configuration for `leading` and/or `trailing` behavior
  * @returns A debounced version of the original function
  */
-export function debounce<T extends (...args: Array<any>) => any>(
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export function debounce<T extends (...args: any[]) => any>(
   callback: T,
   wait = 0,
   { leading = true, trailing = true }: DebounceOptions = {}
@@ -30,7 +31,9 @@ export function debounce<T extends (...args: Array<any>) => any>(
   function debounced(this: unknown, ...args: Parameters<T>): void {
     const isLeadingEdge = leading && !timeoutId;
 
+    // Preserve context for deferred calls
     lastArgs = args;
+    /* eslint-disable-next-line @typescript-eslint/no-this-alias */
     lastThis = this;
 
     // Prevent previously created timeouts from completing
