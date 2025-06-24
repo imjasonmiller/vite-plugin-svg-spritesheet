@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.2.9
+
+### Patch Changes
+
+- e6f15e8: Add linting and typecheck to CI
+
 ## 0.2.8
 
 ### Patch Changes
