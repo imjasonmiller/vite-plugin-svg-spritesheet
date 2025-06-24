@@ -1,27 +1,22 @@
 # `vite-plugin-svg-spritesheet 👨🏽‍🎨`
 
-**Fast, scalable, and fully typed SVG spritesheets for Vite.**
+![npm version](https://img.shields.io/npm/v/vite-plugin-svg-spritesheet?style=flat) ![Build Status](https://img.shields.io/github/actions/workflow/status/imjasonmiller/vite-plugin-svg-spritesheet/ci.yml?style=flat)
 
-Bundles your SVG icons into a single optimized SVG.
-
-Includes generated TypeScript types, layered overrides, live development updates, and smart file-based caching.
+**Fast, scalable, and type-safe SVG spritesheets for Vite**
+Bundle and optimize your SVG icons into a single spritesheet with live updates and TypeScript support.
 
 ## Features
 
-- **Build-time bundling** – No runtime dependencies or JavaScript injection.
-- **Layered directory support** – Organize icons into folders like `base/`, `theme/`, and `custom/`, where later folders in the `include` array override earlier ones. This allows you to build up icon sets with custom theming or fallbacks.
-- **SVGO optimization** – Minify and clean SVGs during build.
-- **Type-safe integration** – Exports [TypeScript types](#typescript-integration) for icon names.
-- **Live dev updates** – Automatically refreshes spritesheet on file change.
-- **Content-based caching** – Only processes changed files, via hashing.
-- **Directory-based namespacing** – Auto-generates IDs based on directory structure.
-- **Custom symbol IDs** – Generate ID logic per file via `customSymbolId()`.
-- **Batch processing** – Efficiently handles large-scale icon libraries.
+- **Performance and efficiency:** Built entirely at build-time with no runtime dependencies, this plugin optimizes SVGs using SVGO, caches intelligently using content hashes, and scales effortlessly to thousands of icons with batch processing.
+
+- **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and type declarations.
+
+- **Flexibility:** Icons can be layered from multiple folders (e.g. `base/`, `theme/`, `custom/`), with later folders overriding earlier ones. Symbol IDs reflect directory structure by default, but you can fully customize them using your own logic.
 
 ## Installation
 
 ```bash
-npm add vite-plugin-svg-spritesheet --save-dev
+npm install vite-plugin-svg-spritesheet --save-dev
 ```
 
 ## How to use
@@ -37,30 +32,12 @@ import {
 export default defineConfig({
   plugins: [
     svgSpritesheet({
-      include: [
-        'node_modules/amazing-icons/src/base',
-        'src/assets/icons/theme',
-      ],
-      svgoConfig: {
-        floatPrecision: 2,
-        multipass: true,
-        plugins: [
-          {
-            name: 'preset-default',
-            params: {
-              overrides: {
-                removeViewBox: false,
-              },
-            },
-          },
-          'prefixIds',
-        ],
-      },
+      include: ['src/assets/icons/base', 'src/assets/icons/theme'],
       output: 'public/spritesheet.svg',
+      svgoConfig: {
+        plugins: ['preset-default', 'prefixIds'],
+      },
       types: {
-        // Generate a string literal union with `IconName` as the exported
-        // type name. For enums there is a similar `generateEnumDeclaration`
-        // function.
         generateDeclaration: generateTypeDeclaration('IconName'),
         output: 'src/generated/icons.ts',
       },
@@ -74,13 +51,12 @@ export default defineConfig({
 The plugin can generate icon names as a string literal union, an enum or generate something of your own by passing a function that receives a `Map` of all current sprites.
 
 ```typescript
-// String literal union
-export type IconName = 'icon-sm-a' | 'icon-md-b' | 'icon-lg-c';
-// Enum
+export type IconName = 'icon-sm-add' | 'icon-md-delete' | 'icon-lg-change';
+
 export enum IconName {
-  ICON_SM_A = 'icon-sm-a',
-  ICON_MD_B = 'icon-md-b',
-  ICON_LG_C = 'icon-lg-c',
+  ICON_SM_ADD = 'icon-sm-add',
+  ICON_MD_DELETE = 'icon-md-delete',
+  ICON_LG_CHANGE = 'icon-lg-change',
 }
 ```
 
@@ -90,7 +66,7 @@ Below are the configuration options available for `svgSpritesheet`:
 
 | Option                      | Type                           | Description                                                               |
 | --------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| `include`                   | `string[]`                     | Ordered list of directories to include. Later ones override earlier ones. |
+| `include`                   | `string \| string[]`           | Ordered list of directories to include. Later ones override earlier ones. |
 | `output`                    | `string`                       | Path to output SVG file.                                                  |
 | `svgoConfig`                | `object`                       | Custom [SVGO](https://svgo.dev/) configuration.                           |
 | `customSymbolId`            | `(path: ParsedPath) => string` | Custom function for the `id` attribute of the icon's `<symbol />`.        |
