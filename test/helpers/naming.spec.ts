@@ -1,5 +1,5 @@
 import { expect, test, describe } from 'vitest';
-import { toEnumKey, toEnumValue } from '../src/helpers/naming';
+import { toEnumKey, toEnumValue } from '../../src/helpers/naming';
 
 describe('converts a string to a valid enum key', () => {
   test('returns underscore if input and prefix are empty or symbols', () => {
