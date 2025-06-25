@@ -1,10 +1,11 @@
 import { optimize } from 'svgo';
+import { normalizeError } from './error';
+
 import type {
   SvgSpritesheetPluginContext,
   ParsedSvg,
   SvgSpriteSymbolAttrs,
 } from './../types';
-import { normalizeError } from './error';
 
 /**
  * Parse SVG XML string and warns on missing required attributes. Returns a
@@ -51,7 +52,10 @@ export function optimizeSvg(
   }
 
   try {
-    const optimized = optimize(content, context.options.svgoConfig);
+    const optimized = optimize(content, {
+      ...context.options.svgoConfig,
+      path: filePath,
+    });
 
     if ('data' in optimized && optimized.data.length) {
       return optimized.data;
