@@ -64,7 +64,7 @@
     "vitest": "^3.2.3"
   },
   "peerDependencies": {
-    "vite": "^6.3.5"
+    "vite": "^7.0.0"
   },
   "dependencies": {
     "fast-xml-parser": "^5.2.4",
