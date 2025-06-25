@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.3.1
+
+### Patch Changes
+
+- 0698dd2: Add `path` to `svgo` config for unique ids in `defs`
+
 ## 0.3.0
 
 ### Minor Changes
