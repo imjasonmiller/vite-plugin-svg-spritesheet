@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.4.1
+
+### Patch Changes
+
+- 0f81e89: Add live example for vanilla JavaScript
+
 ## 0.4.0
 
 ### Minor Changes

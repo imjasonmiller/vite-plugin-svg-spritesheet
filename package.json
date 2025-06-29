@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-svg-spritesheet",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Vite plugin for SVG spritesheets with SVGO",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
