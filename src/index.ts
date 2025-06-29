@@ -1,7 +1,4 @@
 export { svgSpritesheet } from './plugin';
-export {
-  generateEnumDeclaration,
-  generateTypeDeclaration,
-} from './helpers/spritesheet';
+export { generateEnum, generateStringUnion } from './helpers/spritesheet';
 
-export type { SvgSpritesheetPluginOptions } from './types';
+export type { PluginOptions } from './types';

@@ -10,7 +10,7 @@ import type { SpriteMap, SvgSpritesheetPluginContext } from '../types';
  * @param name - The type's name, defaults to `IconName`
  * @returns - String content of the type declaration
  */
-export function generateTypeDeclaration(name = 'IconName') {
+export function generateStringUnion(name = 'IconName') {
   return (spriteMap: SpriteMap): string => {
     const members = Array.from(spriteMap.values(), ({ spriteId }) => {
       return `  | "${spriteId}"`;
@@ -26,7 +26,7 @@ export function generateTypeDeclaration(name = 'IconName') {
  * @param name - The enum's name, defaults to `IconName`
  * @returns - String content of the enum declaration
  */
-export function generateEnumDeclaration(name = 'IconName') {
+export function generateEnum(name = 'IconName') {
   return (spriteMap: SpriteMap): string => {
     const members = Array.from(spriteMap.keys(), (key) => {
       const enumKey = toEnumKey(key);
@@ -76,9 +76,9 @@ export async function writeSpritesheet({
   if (options.types) {
     // Clone to avoid the user from mutating the data structure
     const clonedSpriteMap = structuredClone(sortedSpriteMap);
-    const declaration = options.types.generateDeclaration
-      ? options.types.generateDeclaration(clonedSpriteMap)
-      : generateEnumDeclaration()(clonedSpriteMap);
+    const declaration = options.types.generateTypes
+      ? options.types.generateTypes(clonedSpriteMap)
+      : generateStringUnion()(clonedSpriteMap);
 
     try {
       await fs.writeFile(options.types.output, declaration, 'utf8');
