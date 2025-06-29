@@ -64,14 +64,15 @@ export enum IconName {
 
 Below are the configuration options available for `svgSpritesheet`:
 
-| Option                      | Type                           | Description                                                               |
-| --------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| `include`                   | `string \| string[]`           | Ordered list of directories to include. Later ones override earlier ones. |
-| `output`                    | `string`                       | Path to output SVG file.                                                  |
-| `svgoConfig`                | `object`                       | Custom [SVGO](https://svgo.dev/) configuration.                           |
-| `customSymbolId`            | `(path: ParsedPath) => string` | Custom function for the `id` attribute of the icon's `<symbol />`.        |
-| `types.output`              | `string`                       | Path to output generated TypeScript types.                                |
-| `types.generateDeclaration` | `(map: SpriteMap) => string`   | Function that generates a TS declaration from the sprite map.             |
+| Option                   | Type                           | Description                                                                           |
+| ------------------------ | ------------------------------ | ------------------------------------------------------------------------------------- |
+| `include`                | `string \| string[]`           | Ordered list of directories to include. Later ones override earlier ones.             |
+| `output`                 | `string`                       | Path to output SVG file.                                                              |
+| `svgoConfig`             | `object`                       | Custom [SVGO](https://svgo.dev/) configuration.                                       |
+| `customSymbolId`         | `(path: ParsedPath) => string` | Custom function for the `id` attribute of the icon's `<symbol />`.                    |
+| `replaceColorAttributes` | `boolean`                      | Replaces `fill` and `stroke` with CSS variables to allow for `currentColor` overrides |
+| `types.output`           | `string`                       | Path to output generated TypeScript types.                                            |
+| `types.generateTypes`    | `(map: SpriteMap) => string`   | Function that can write TypeScript types from the sprite map.                         |
 
 ## Framework integration
 

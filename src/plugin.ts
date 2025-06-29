@@ -1,131 +1,22 @@
-import fs from 'fs/promises';
 import path from 'path';
-import { createHash } from 'crypto';
 import { glob } from 'tinyglobby';
 import picomatch from 'picomatch';
-import { XMLParser, XMLBuilder } from 'fast-xml-parser';
-import {
-  parseSvg,
-  optimizeSvg,
-  cleanSymbolAttributes,
-} from './helpers/parsing';
+import { XMLParser, XMLBuilder, X2jOptions } from 'fast-xml-parser';
 import { debounce } from './helpers/debounce';
 import { writeSpritesheet } from './helpers/spritesheet';
+import { processSvg } from './core/processSvg';
 
-import type { ParsedPath } from 'path';
 import type { Plugin } from 'vite';
 import type {
-  ProcessSvgParams,
-  SvgSpritesheetPluginOptions,
+  PluginOptions,
   SpriteMap,
-  SpriteMapEntry,
   IncludeMatcher,
   SvgSpritesheetPluginContext,
 } from './types';
 
 import { LOG_PLUGIN_NAME, DEFAULT_BATCH_SIZE } from './constants';
 import { normalizeError } from './helpers/error';
-import { replaceColorAttributes } from './helpers/colorAttributes';
-
-/**
- * Generate a default `id` attribute value for the `<symbol />` from path parts
- */
-export function defaultSymbolId(parsedPath: ParsedPath): string {
-  const dirParts = parsedPath.dir.split(path.sep).filter(Boolean);
-
-  return ['icon', ...dirParts, parsedPath.name].join('-');
-}
-
-function isProcessingSkipped(
-  context: SvgSpritesheetPluginContext,
-  entry: SpriteMapEntry | undefined,
-  currentHash: string,
-  layerIndex: number
-): boolean {
-  if (!entry) {
-    return false;
-  }
-
-  // Skip processing as it is overwritten by another layer
-  if (entry.layerIndex > layerIndex) {
-    context.logger.warn(
-      `Skipping processing, as it is overwritten by another layer: ${entry.spriteId}`
-    );
-    return true;
-  }
-
-  // Skip processing as its contents are the same
-  if (entry.hash === currentHash) {
-    context.logger.warn(
-      `Skipping processing, as its contents are the same: ${entry.spriteId}`
-    );
-    return true;
-  }
-
-  return false;
-}
-
-/**
- * Process a single SVG file: read, (optionally) optimize, parse, clean and add
- * to sprite map.
- *
- * @param params Parameters including context, file path, include info, and index
- * @returns
- */
-async function processSvg({
-  context,
-  filePath, // rename to `entry`
-  include,
-  layerIndex,
-}: ProcessSvgParams): Promise<void> {
-  try {
-    const absoluteInclude = path.resolve(include);
-    const absoluteFilePath = path.resolve(absoluteInclude, filePath);
-    const relativeToInclude = path.relative(absoluteInclude, absoluteFilePath);
-    const parsedRelativePath = path.parse(relativeToInclude);
-
-    const file = await fs.readFile(absoluteFilePath, 'utf8');
-    // Hash file contents for comparison. MD5 is chosen for speed and
-    // sufficiently low collision risk in this context. It is not intended for
-    // cryptographic security.
-    const hash = createHash('md5').update(file).digest('hex');
-    const spriteId = context.options.customSymbolId
-      ? context.options.customSymbolId(parsedRelativePath)
-      : defaultSymbolId(parsedRelativePath);
-
-    const existingEntry = context.spriteMap.get(relativeToInclude);
-    if (isProcessingSkipped(context, existingEntry, hash, layerIndex)) {
-      return;
-    }
-
-    const svg = optimizeSvg(context, file, filePath);
-    const svgObj = parseSvg(context, svg, filePath);
-    if (!svgObj) {
-      context.logger.warn(
-        `Parsing SVG returned empty or invalid data for file: "${filePath}". Skipping.`
-      );
-      return;
-    }
-
-    if (context.options.replaceColorAttributes) {
-      replaceColorAttributes(svgObj);
-    }
-
-    const symbolAttrs = cleanSymbolAttributes(svgObj, spriteId);
-    const spriteString = context.xmlBuilder.build({ symbol: symbolAttrs });
-    context.spriteMap.set(relativeToInclude, {
-      spriteId,
-      spriteString,
-      layerIndex,
-      hash,
-    });
-  } catch (error) {
-    const normalizedError = normalizeError(error);
-    context.logger.warn(
-      `Failed to process SVG file "${filePath}": ${normalizedError.message}`
-    );
-  }
-}
+import { isDirectory, assertWritablePath } from './helpers/fs';
 
 const debouncedWriteSpriteSheet = debounce(
   async (args: SvgSpritesheetPluginContext) => {
@@ -175,7 +66,7 @@ async function handleFileEvent(
  * @param options - Configuration options for the plugin
  * @returns Vite plugin instance
  */
-export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
+export function svgSpritesheet(options: PluginOptions): Plugin {
   if (options.include.length === 0) {
     throw new Error('The `include` option must be a non-empty array');
   }
@@ -183,8 +74,9 @@ export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
   const xmlOptions = {
     ignoreDeclaration: true,
     ignoreAttributes: false,
+    preserveOrder: true,
     attributeNamePrefix: '@_',
-  };
+  } satisfies X2jOptions;
 
   const batchSize = Math.max(1, options.batchSize ?? DEFAULT_BATCH_SIZE);
 
@@ -209,24 +101,35 @@ export function svgSpritesheet(options: SvgSpritesheetPluginOptions): Plugin {
         ? options.include
         : [options.include];
 
-      const resolvedInlcudes: string[] = [];
+      const resolvedIncludes: string[] = [];
 
       for (const include of normalizedIncludes) {
         const resolved = path.resolve(include);
 
-        const stats = await fs.stat(resolved).catch(() => null);
-        if (!stats?.isDirectory()) {
-          this.error(`The include "${include}" is not a valid directory`);
+        if (!(await isDirectory(resolved))) {
+          this.error(
+            `${LOG_PLUGIN_NAME}: The include "${include}" is not a valid directory`
+          );
         }
 
-        resolvedInlcudes.push(include);
+        resolvedIncludes.push(include);
       }
 
-      for (const [layerIndex, include] of resolvedInlcudes.entries()) {
+      try {
+        await assertWritablePath(options.output);
+      } catch (err) {
+        const normalizedError = normalizeError(err);
+        this.error(
+          `${LOG_PLUGIN_NAME}: Output path "${options.output}" is invalid: ${normalizedError.message}`
+        );
+      }
+
+      for (const [layerIndex, include] of resolvedIncludes.entries()) {
         let entries: string[] = [];
         try {
           entries = await glob('**/*.svg', {
             cwd: include,
+            onlyFiles: true,
           });
         } catch (error) {
           const normalizedError = normalizeError(error);

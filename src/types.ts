@@ -13,7 +13,7 @@ export interface Logger {
 
 export interface SvgSpritesheetPluginContext {
   logger: Logger;
-  options: SvgSpritesheetPluginOptions;
+  options: PluginOptions;
   spriteMap: SpriteMap;
   xmlParser: XMLParser;
   xmlBuilder: XMLBuilder;
@@ -54,13 +54,22 @@ export interface SpriteMapEntry {
 interface SpritesheetTypesOptions {
   output: string;
   /**
-   * Generate a custom declaration by passing a callback that receives a
+   * Generates TypeScript types by passing a callback receiving the
    * `SpriteMap`.
+   *
+   * The `generateEnum` and `generateStringUnion` helper functions
+   * are exported, but a custom one can be passed as well.
+   *
+   * @example
+   * // Generate a string union with name `SpriteName`
+   * generateTypes: generateStringUnion("SpriteName")
+   * // Generate an enum for all sprites with name `SpriteName`
+   * generateTypes: generateEnum("SpriteName")
    */
-  generateDeclaration?: (spriteMap: SpriteMap) => string;
+  generateTypes?: (spriteMap: SpriteMap) => string;
 }
 
-export interface SvgSpritesheetPluginOptions {
+export interface PluginOptions {
   /**
    * Directory or directories to include icons from.
    * Accepts a single path or array of paths.
