@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.4.0
+
+### Minor Changes
+
+- 702c218: Allow for `currentColor` in icons by replacing color attributes with CSS variables and a fallback to `initial`.
+
 ## 0.3.2
 
 ### Patch Changes
