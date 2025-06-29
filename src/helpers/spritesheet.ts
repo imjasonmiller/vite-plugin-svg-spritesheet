@@ -3,6 +3,8 @@ import { toEnumKey, toEnumValue } from './naming';
 import { GENERATED_FILE_HEADER } from '../constants';
 
 import type { SpriteMap, SvgSpritesheetPluginContext } from '../types';
+import { normalizeError } from './error';
+import { assertWritablePath } from './fs';
 
 /**
  * Generate a TypeScript union type for sprite names
@@ -68,8 +70,11 @@ export async function writeSpritesheet({
 
   try {
     await fs.writeFile(options.output, spritesheetSvg, 'utf8');
-  } catch {
-    logger.error(`Failed to write spritesheet to "${options.output}"`);
+  } catch (err) {
+    const normalizedError = normalizeError(err);
+    logger.error(
+      `Failed to write spritesheet to "${options.output}": ${normalizedError.message}`
+    );
   }
 
   // If defined, generate TypeScript types
@@ -81,9 +86,13 @@ export async function writeSpritesheet({
       : generateStringUnion()(clonedSpriteMap);
 
     try {
+      await assertWritablePath(options.types.output);
       await fs.writeFile(options.types.output, declaration, 'utf8');
-    } catch {
-      logger.warn(`Failed to write types to "${options.types.output}"`);
+    } catch (err) {
+      const normalizedError = normalizeError(err);
+      logger.warn(
+        `Failed to write types to "${options.types.output}": ${normalizedError.message}`
+      );
     }
   }
 }

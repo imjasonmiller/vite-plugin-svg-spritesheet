@@ -1,0 +1,6 @@
+{
+  "startCommand": "npm run dev",
+  "defaultProject": "vite-plugin-svg-spritesheet-vanilla",
+  "openFile": "vite.config.ts",
+  "installDependencies": true
+}
