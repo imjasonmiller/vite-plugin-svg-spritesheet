@@ -1,6 +1,6 @@
 # `vite-plugin-svg-spritesheet 👨🏽‍🎨`
 
-![npm version](https://img.shields.io/npm/v/vite-plugin-svg-spritesheet?style=flat) ![Build Status](https://img.shields.io/github/actions/workflow/status/imjasonmiller/vite-plugin-svg-spritesheet/ci.yml?style=flat)
+![npm version](https://img.shields.io/npm/v/vite-plugin-svg-spritesheet?style=flat) ![Build Status](https://img.shields.io/github/actions/workflow/status/imjasonmiller/vite-plugin-svg-spritesheet/ci.yml?style=flat) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 **Fast, scalable, and type-safe SVG spritesheets for Vite**\
 Bundle and optimize your SVG icons into a single spritesheet with live updates and TypeScript support.
@@ -11,7 +11,7 @@ Bundle and optimize your SVG icons into a single spritesheet with live updates a
 
 - **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and type declarations.
 
-- **Flexibility:** Icons can be layered from multiple folders (e.g. `base/`, `theme/`, `custom/`), with later folders overriding earlier ones. Symbol IDs reflect directory structure by default, but you can fully customize them using your own logic.
+- **Flexibility:** Icons can be organized across multiple directories (e.g. `base/`, `theme/`, `custom/`). Later directories take precedence, allowing for clean overrides. Symbol IDs reflect directory structure by default, but can be customized.
 
 ## Installation
 
@@ -19,13 +19,13 @@ Bundle and optimize your SVG icons into a single spritesheet with live updates a
 npm install vite-plugin-svg-spritesheet --save-dev
 ```
 
-## How to use
+## Quick start
 
 ```typescript
 // vite.config.ts
 import { defineConfig } from 'vite';
 import {
-  generateTypeDeclaration,
+  generateStringUnion,
   svgSpritesheet,
 } from 'vite-plugin-svg-spritesheet';
 
@@ -38,7 +38,7 @@ export default defineConfig({
         plugins: ['preset-default', 'prefixIds'],
       },
       types: {
-        generateDeclaration: generateTypeDeclaration('IconName'),
+        generateTypes: generateStringUnion('IconName'),
         output: 'src/generated/icons.ts',
       },
     }),
@@ -48,7 +48,7 @@ export default defineConfig({
 
 ## TypeScript integration
 
-The plugin can generate icon names as a string literal union, an enum or generate something of your own by passing a function that receives a `Map` of all current sprites.
+The plugin supports automatic type generation for safer, maintainable icon usage:
 
 ```typescript
 export type IconName = 'icon-sm-add' | 'icon-md-delete' | 'icon-lg-change';
@@ -60,21 +60,43 @@ export enum IconName {
 }
 ```
 
+You can also pass a custom function to generateTypes to control the output format.
+
 ## Plugin Options
 
 Below are the configuration options available for `svgSpritesheet`:
 
-| Option                   | Type                           | Description                                                                           |
-| ------------------------ | ------------------------------ | ------------------------------------------------------------------------------------- |
-| `include`                | `string \| string[]`           | Ordered list of directories to include. Later ones override earlier ones.             |
-| `output`                 | `string`                       | Path to output SVG file.                                                              |
-| `svgoConfig`             | `object`                       | Custom [SVGO](https://svgo.dev/) configuration.                                       |
-| `customSymbolId`         | `(path: ParsedPath) => string` | Custom function for the `id` attribute of the icon's `<symbol />`.                    |
-| `replaceColorAttributes` | `boolean`                      | Replaces `fill` and `stroke` with CSS variables to allow for `currentColor` overrides |
-| `types.output`           | `string`                       | Path to output generated TypeScript types.                                            |
-| `types.generateTypes`    | `(map: SpriteMap) => string`   | Function that can write TypeScript types from the sprite map.                         |
+| Option                   | Type                           | Description                                                                |
+| ------------------------ | ------------------------------ | -------------------------------------------------------------------------- |
+| `include`                | `string \| string[]`           | Ordered list of directories to include. Later ones override earlier ones.  |
+| `output`                 | `string`                       | Output path for the generated SVG spritesheet.                             |
+| `svgoConfig`             | `object`                       | [SVGO](https://svgo.dev/) configuration for optimization.                  |
+| `customSymbolId`         | `(path: ParsedPath) => string` | Custom function for the `id` attribute of the `<symbol>`.                  |
+| `replaceColorAttributes` | `boolean`                      | Replaces `fill` and `stroke` with CSS variables for `currentColor` support |
+| `types.output`           | `string`                       | Path for the generated TypeScript types.                                   |
+| `types.generateTypes`    | `(map: SpriteMap) => string`   | Function that receives the sprite map and can return TypeScript types.     |
 
 ## Framework integration
+
+This repository includes usage examples for several frameworks in the /examples directory. These examples are self-contained and are not included in the published npm package.
+
+### Available examples
+
+| Framework | Directory                                                                                                    | Live demo                                                                                                                |
+| --------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Vanilla   | [/examples/vanilla](https://github.com/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/vanilla) | [Open in StackBlitz](https://stackblitz.com/github/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/vanilla) |
+
+### Running locally
+
+To run any example locally:
+
+```bash
+cd examples/<framework>
+npm install
+npm run dev
+```
+
+Replace `<framework>` with one of the supported options (e.g., `vue`, `react`).
 
 <details>
   <summary>Vue</summary>
@@ -85,7 +107,7 @@ Below are the configuration options available for `svgSpritesheet`:
 <template>
   <div>
     <svg class="icon" viewBox="0 0 24 24">
-      <use :xlink:href="spriteUrl"></use>
+      <use :href="spriteUrl"></use>
     </svg>
   </div>
 </template>
