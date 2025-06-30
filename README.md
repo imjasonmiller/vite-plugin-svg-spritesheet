@@ -1,15 +1,17 @@
-# `vite-plugin-svg-spritesheet 👨🏽‍🎨`
+# `vite-plugin-svg-spritesheet`
 
 ![npm version](https://img.shields.io/npm/v/vite-plugin-svg-spritesheet?style=flat) ![Build Status](https://img.shields.io/github/actions/workflow/status/imjasonmiller/vite-plugin-svg-spritesheet/ci.yml?style=flat) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-**Fast, scalable, and type-safe SVG spritesheets for Vite**\
-Bundle and optimize your SVG icons into a single spritesheet with live updates and TypeScript support.
+<img src="https://raw.githubusercontent.com/imjasonmiller/vite-plugin-svg-spritesheet/main/images/logo.png" alt="Logo" width="400"/>
+
+**Type-safe, build-time SVG spritesheets for modern Vite projects**\
+Generate a single optimized spritesheet from your SVG icons, with TypeScript type definitions, efficient caching, live reload support, and full control over configuration — all at build time, with no runtime overhead.
 
 ## Features
 
-- **Performance and efficiency:** Built entirely at build-time with no runtime dependencies, this plugin optimizes SVGs using SVGO, caches intelligently using content hashes, and scales effortlessly to thousands of icons with batch processing.
+- **Performance and efficiency:** Built entirely at build-time with no runtime dependencies, this plugin optimizes SVGs using SVGO, caches intelligently using content hashes, and scales well with batch processing.
 
-- **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and TypeScript type generation.
+- **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and TypeScript type generation. Optional color attribute replacement enables theming with `currentColor` and CSS fallbacks, without needing duplicate icons.
 
 - **Flexibility:** Icons can be organized across multiple directories (e.g. `base/`, `theme/`, `custom/`). Later directories take precedence, allowing for clean overrides. Symbol IDs reflect directory structure by default, but can be customized.
 
@@ -35,7 +37,15 @@ export default defineConfig({
       include: ['src/assets/icons/base', 'src/assets/icons/theme'],
       output: 'public/spritesheet.svg',
       svgoConfig: {
-        plugins: ['preset-default', 'prefixIds'],
+        plugins: [
+          // An issue when with Figma's exports might be that colors are applied
+          // via the `style` attribute, making it impossible to override it with
+          // the parent's `currentColor`.
+          'convertStyleToAttrs',
+          // To generate unique IDs for each <symbol> in case they are
+          // internally referenced, e.g. a gradient in <defs>.
+          'prefixIds',
+        ],
       },
       types: {
         generateTypes: generateStringUnion('IconName'),
@@ -48,7 +58,7 @@ export default defineConfig({
 
 ## TypeScript integration
 
-The plugin supports automatic type generation for safer, maintainable icon usage:
+The plugin supports automatic type generation, enabling editor autocomplete and safer, maintainable icon usage:
 
 ```typescript
 export type IconName = 'icon-sm-add' | 'icon-md-delete' | 'icon-lg-change';
