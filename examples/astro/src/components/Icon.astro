@@ -1,0 +1,16 @@
+---
+import type { IconName } from '../generated/icons.ts';
+
+interface Props {
+  name: IconName;
+	'has-current-color'?: boolean;
+}
+
+const { name, 'has-current-color': hasCurrentColor } = Astro.props;
+
+const style = hasCurrentColor ? '--c: currentColor;' : '--c: initial;';
+---
+
+<svg viewBox="0 0 128 128" class="icon" style={style}>
+  <use href={`/spritesheet.svg#${name}`}></use>
+</svg>
