@@ -1,0 +1,54 @@
+---
+import Icon from "../components/Icon.astro";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+  	<link rel="stylesheet" href="src/styles/global.css" />
+	</head>
+	<body>
+		<div id="app">
+
+			<div class="current-color-controls">
+				<input
+					type="color"
+					id="current-color"
+					name="current-color"
+					value="#985DF7"
+				/>
+				<label for="current-color">Current color</label>
+			</div>
+
+			<div class="sprites">
+				<Icon name='icon-a' has-current-color />
+				<Icon name='icon-b' />
+				<Icon name='icon-c' />
+				<Icon name='icon-d' />
+			</div>
+
+		</div>
+
+		<script>
+		function main() {
+			const spritesEl = document.querySelector(".sprites");
+			if (!(spritesEl instanceof HTMLElement)) return;
+
+    		const inputColorEl = document.querySelector('input');
+    		if (!inputColorEl) return;
+
+    		inputColorEl.addEventListener('input', (event: Event): void => {
+              if (!(event.target instanceof HTMLInputElement)) {
+             	return;
+              }
+
+            spritesEl.style.color = event.target.value;
+    		});
+		}
+
+		main();
+		</script>
+	</body>
+</html>

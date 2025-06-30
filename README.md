@@ -9,7 +9,7 @@ Bundle and optimize your SVG icons into a single spritesheet with live updates a
 
 - **Performance and efficiency:** Built entirely at build-time with no runtime dependencies, this plugin optimizes SVGs using SVGO, caches intelligently using content hashes, and scales effortlessly to thousands of icons with batch processing.
 
-- **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and type declarations.
+- **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and TypeScript type generation.
 
 - **Flexibility:** Icons can be organized across multiple directories (e.g. `base/`, `theme/`, `custom/`). Later directories take precedence, allowing for clean overrides. Symbol IDs reflect directory structure by default, but can be customized.
 
@@ -82,9 +82,18 @@ This repository includes usage examples for several frameworks in the /examples 
 
 ### Available examples
 
-| Framework | Directory                                                                                                    | Live demo                                                                                                                |
-| --------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| Vanilla   | [/examples/vanilla](https://github.com/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/vanilla) | [Open in StackBlitz](https://stackblitz.com/github/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/vanilla) |
+| Framework | Directory                        | Live demo                          |
+| --------- | -------------------------------- | ---------------------------------- |
+| Vanilla   | [/examples/vanilla][vanilla-dir] | [Open in StackBlitz][vanilla-live] |
+| Astro     | [/examples/astro][astro-dir]     | [Open in StackBlitz][astro-live]   |
+| Vue       | [/examples/vue][vue-dir]         | [Open in StackBlitz][vue-live]     |
+
+[vanilla-dir]: https://github.com/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/vanilla
+[vanilla-live]: https://stackblitz.com/github/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/vanilla
+[astro-dir]: https://github.com/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/astro
+[astro-live]: https://stackblitz.com/github/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/astro
+[vue-dir]: https://github.com/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/vue
+[vue-live]: https://stackblitz.com/github/imjasonmiller/vite-plugin-svg-spritesheet/tree/main/examples/vue
 
 ### Running locally
 
@@ -96,45 +105,4 @@ npm install
 npm run dev
 ```
 
-Replace `<framework>` with one of the supported options (e.g., `vue`, `react`).
-
-<details>
-  <summary>Vue</summary>
-
-**Icon.vue**
-
-```vue
-<template>
-  <div>
-    <svg class="icon" viewBox="0 0 24 24">
-      <use :href="spriteUrl"></use>
-    </svg>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-// The spritesheet is copied to the desired folder and imported as a URL
-import spritesheetUrl from './../assets/spritesheet.svg?url';
-
-import type { IconName } from './../generated/icons';
-
-interface IconProps {
-  name: IconName;
-}
-
-const { name } = defineProps<IconProps>();
-
-const spriteUrl = computed(() => `${spritesheetUrl}#${name}`);
-</script>
-```
-
-It can then be used like below:
-
-```vue
-<template>
-  <Icon name="icon-md-general-edit" />
-</template>
-```
-
-</details>
+Replace `<framework>` with one of the supported options (e.g. `vanilla`, `vue`, `astro`).

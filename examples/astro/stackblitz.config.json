@@ -1,0 +1,6 @@
+{
+  "startCommand": "npm run dev",
+  "defaultProject": "vite-plugin-svg-spritesheet-astro",
+  "openFile": "astro.config.mjs",
+  "installDependencies": true
+}

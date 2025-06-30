@@ -1,0 +1,113 @@
+---
+import Icon from "../components/Icon.astro";
+---
+
+<!doctype
+  html
+  > <html
+  lang='en'
+  > <head
+  > <meta
+  charset='utf-8'
+  /
+  > <meta
+  name='viewport'
+  content='width=device-width,initial-scale=1'
+  /
+  > <link
+  href='/styles/global.css'
+  rel='stylesheet'
+  /
+  > </head
+  > <body
+  > <div
+  id='app'
+  > <div
+  class='current-color-controls'
+  > <input
+  type='color'
+  id='current-color'
+  name='current-color'
+  value='#985DF7'
+  /
+  > <label
+  for='current-color'
+  > Current
+  color</label
+  > </div
+  > <div
+  class='sprites'
+  > <Icon
+  name='icon-a'
+  /
+  > <Icon
+  name='icon-b'
+  /
+  > <Icon
+  name='icon-c'
+  /
+  > <Icon
+  name='icon-d'
+  /
+  > </div
+  > </div
+  > </body
+  > </html
+  > <style
+  > * {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  background: #e5e5e5;
+  font-family: sans-serif;
+}
+
+#app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 400px;
+  height: 400px;
+  gap: 1rem;
+}
+
+.current-color-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: normal 0.5rem;
+  border: 2px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.current-color-controls input {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.sprites {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 256px;
+}
+
+.icon {
+  width: 128px;
+  height: 128px;
+}
