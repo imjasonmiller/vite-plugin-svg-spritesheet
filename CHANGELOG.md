@@ -1,5 +1,12 @@
 # vite-plugin-svg-spritesheet
 
+## 0.4.2
+
+### Patch Changes
+
+- e56a999: Update README
+- 9195c9f: Add examples for `vanilla`, and frameworks `vue` and `astro`
+
 ## 0.4.1
 
 ### Patch Changes
