@@ -12,7 +12,9 @@ import { assertWritablePath } from './fs';
  * @param name - The type's name, defaults to `IconName`
  * @returns - String content of the type declaration
  */
-export function generateStringUnion(name = 'IconName') {
+export function generateStringUnion(
+  name = 'IconName'
+): (spriteMap: SpriteMap) => string {
   return (spriteMap: SpriteMap): string => {
     const members = Array.from(spriteMap.values(), ({ spriteId }) => {
       return `  | "${spriteId}"`;
@@ -28,7 +30,9 @@ export function generateStringUnion(name = 'IconName') {
  * @param name - The enum's name, defaults to `IconName`
  * @returns - String content of the enum declaration
  */
-export function generateEnum(name = 'IconName') {
+export function generateEnum(
+  name = 'IconName'
+): (spriteMap: SpriteMap) => string {
   return (spriteMap: SpriteMap): string => {
     const members = Array.from(spriteMap.keys(), (key) => {
       const enumKey = toEnumKey(key);
@@ -49,6 +53,13 @@ export function buildSpritesheet(spriteMap: SpriteMap): string {
   return `<svg xmlns="http://www.w3.org/2000/svg">${symbols}</svg>`;
 }
 
+/**
+ * Sort a Map by keys and/or values, returning a new Map with sorted entries.
+ *
+ * @param map - The map to sort
+ * @param compareFn - Optional comparator function receiving `[key, value]` tuples
+ * @returns
+ */
 export function sortMap<K, V>(
   map: Map<K, V>,
   compareFn?: (a: [K, V], b: [K, V]) => number
@@ -62,8 +73,8 @@ export async function writeSpritesheet({
   logger,
 }: SvgSpritesheetPluginContext): Promise<void> {
   // Sort map in order for the output to be deterministic
-  const sortedSpriteMap = sortMap(spriteMap, ([, entryA], [, entryB]) => {
-    return entryA.spriteId.localeCompare(entryB.spriteId);
+  const sortedSpriteMap = sortMap(spriteMap, ([, a], [, b]) => {
+    return a.spriteId.localeCompare(b.spriteId);
   });
 
   const spritesheetSvg = buildSpritesheet(sortedSpriteMap);

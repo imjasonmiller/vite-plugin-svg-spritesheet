@@ -5,15 +5,15 @@
 <img src="https://raw.githubusercontent.com/imjasonmiller/vite-plugin-svg-spritesheet/main/images/logo.png" alt="Logo" width="400"/>
 
 **Type-safe, build-time SVG spritesheets for modern Vite projects**\
-Generate a single optimized spritesheet from your SVG icons, with TypeScript type definitions, efficient caching, live reload support, and full control over configuration — all at build time, with no runtime overhead.
+Generate a single optimized spritesheet from your SVG sprites, with TypeScript type definitions, efficient caching, live reload support, and full control over configuration — all at build time, with no runtime overhead.
 
 ## Features
 
 - **Performance and efficiency:** Built entirely at build-time with no runtime dependencies, this plugin optimizes SVGs using SVGO, caches intelligently using content hashes, and scales well with batch processing.
 
-- **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and TypeScript type generation. Optional color attribute replacement enables theming with `currentColor` and CSS fallbacks, without needing duplicate icons.
+- **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and TypeScript type generation. Optional color attribute replacement enables theming with `currentColor` and CSS fallbacks, without needing duplicate sprites.
 
-- **Flexibility:** Icons can be organized across multiple directories (e.g. `base/`, `theme/`, `custom/`). Later directories take precedence, allowing for clean overrides. Symbol IDs reflect directory structure by default, but can be customized.
+- **Flexibility:** Sprites can be organized across multiple directories (e.g. `base/`, `theme/`, `custom/`). Later directories take precedence, allowing for clean overrides. Symbol IDs reflect directory structure by default, but can be customized.
 
 ## Installation
 

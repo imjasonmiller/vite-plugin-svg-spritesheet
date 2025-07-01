@@ -1,7 +1,7 @@
 import path from 'path';
 import { glob } from 'tinyglobby';
 import picomatch from 'picomatch';
-import { XMLParser, XMLBuilder, X2jOptions } from 'fast-xml-parser';
+import { XMLParser, XMLBuilder, type X2jOptions } from 'fast-xml-parser';
 import { debounce } from './helpers/debounce';
 import { writeSpritesheet } from './helpers/spritesheet';
 import { processSvg } from './core/processSvg';
@@ -14,15 +14,16 @@ import type {
   SvgSpritesheetPluginContext,
 } from './types';
 
-import { LOG_PLUGIN_NAME, DEFAULT_BATCH_SIZE } from './constants';
+import { LOG_PLUGIN_NAME, DEFAULT_BATCH_SIZE, PLUGIN_NAME } from './constants';
 import { normalizeError } from './helpers/error';
 import { isDirectory, assertWritablePath } from './helpers/fs';
+import { toArray } from './helpers/options';
 
 const debouncedWriteSpriteSheet = debounce(
   async (args: SvgSpritesheetPluginContext) => {
     await writeSpritesheet(args);
   },
-  1500,
+  500,
   { leading: true, trailing: true }
 );
 
@@ -92,18 +93,14 @@ export function svgSpritesheet(options: PluginOptions): Plugin {
   };
 
   return {
-    name: 'vite-plugin-svg-spritesheet',
+    name: PLUGIN_NAME,
 
     async buildStart() {
       context.logger = this;
 
-      const normalizedIncludes = Array.isArray(options.include)
-        ? options.include
-        : [options.include];
-
       const resolvedIncludes: string[] = [];
 
-      for (const include of normalizedIncludes) {
+      for (const include of toArray(options.include)) {
         const resolved = path.resolve(include);
 
         if (!(await isDirectory(resolved))) {
@@ -176,9 +173,7 @@ export function svgSpritesheet(options: PluginOptions): Plugin {
     // See: https://vite.dev/config/server-options#server-watch
     configureServer(server) {
       // Precompile and cache all matchers
-      const matchers = (
-        Array.isArray(options.include) ? options.include : [options.include]
-      ).map((include, index) => {
+      const matchers = toArray(options.include).map((include, index) => {
         const pattern = path.resolve(path.join(include, '**/*.svg'));
 
         return {
