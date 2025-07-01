@@ -1,3 +1,4 @@
+export const PLUGIN_NAME = 'vite-plugin-svg-spritesheet';
 export const LOG_PLUGIN_NAME = '[svg-spritesheet]';
 export const DEFAULT_BATCH_SIZE = 20;
 export const GENERATED_FILE_HEADER = `
