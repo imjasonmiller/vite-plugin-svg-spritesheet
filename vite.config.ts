@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import { builtinModules } from 'module';
 import fs from 'fs/promises';
 import dts from 'unplugin-dts/vite';
+import { dependencies } from './package.json';
 
 export default defineConfig({
   build: {
@@ -13,7 +14,7 @@ export default defineConfig({
       formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: ['vite', ...builtinModules],
+      external: ['vite', ...Object.keys(dependencies), ...builtinModules],
       output: {
         globals: {
           vite: 'vite',
