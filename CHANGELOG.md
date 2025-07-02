@@ -1,5 +1,12 @@
 # vite-plugin-svg-spritesheet
 
+## 0.4.3
+
+### Patch Changes
+
+- 0b3886d: Externalize dependencies
+- 3608e3c: Update README
+
 ## 0.4.2
 
 ### Patch Changes
