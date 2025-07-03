@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.5.0
+
+### Minor Changes
+
+- 104728e: Allow `exclude` patterns
+
 ## 0.4.3
 
 ### Patch Changes
