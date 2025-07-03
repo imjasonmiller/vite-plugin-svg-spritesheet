@@ -22,6 +22,41 @@ describe('svgSpritesheet plugin (integration)', () => {
     await fs.rm(tempDir, { recursive: true, force: true });
   });
 
+  it('ignores patterns listed in exclude', async () => {
+    const spritePath = path.join(tempDir, 'spritesheet.svg');
+
+    await build({
+      build: {
+        write: false,
+      },
+      plugins: [
+        svgSpritesheet({
+          include: fixturesDir,
+          exclude: ['icon-c.svg', 'nested/icon-d.svg'],
+          output: spritePath,
+        }),
+      ],
+    });
+
+    const exists = await fs
+      .access(spritePath)
+      .then(() => true)
+      .catch(() => false);
+
+    expect(exists).toBe(true);
+
+    const content = await fs.readFile(spritePath, 'utf8');
+
+    // Ensure the spritesheet output doesn't unexpectedly change
+    expect(content).toMatchSnapshot();
+
+    // Check that all icon names are in the sprite
+    expect(content).toContain('icon-a');
+    expect(content).toContain('icon-b');
+    expect(content).not.toContain('icon-c');
+    expect(content).not.toContain('nested-icon-d');
+  });
+
   it('generates a spritesheet from fixture SVGs', async () => {
     const spritePath = path.join(tempDir, 'spritesheet.svg');
 

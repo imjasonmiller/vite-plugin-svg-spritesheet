@@ -33,7 +33,12 @@ async function handleFileEvent(
   file: string,
   matchers: IncludeMatcher[]
 ): Promise<void> {
-  for (const { matcher, include, layerIndex } of matchers) {
+  for (const { matcher, excludeMatchers, include, layerIndex } of matchers) {
+    const isExcluded = excludeMatchers?.some((m) => m(file));
+    if (isExcluded) {
+      continue;
+    }
+
     if (matcher(file)) {
       switch (event) {
         case 'add':
@@ -126,6 +131,7 @@ export function svgSpritesheet(options: PluginOptions): Plugin {
         try {
           entries = await glob('**/*.svg', {
             cwd: include,
+            ignore: options.exclude,
             onlyFiles: true,
           });
         } catch (error) {
@@ -173,11 +179,17 @@ export function svgSpritesheet(options: PluginOptions): Plugin {
     // See: https://vite.dev/config/server-options#server-watch
     configureServer(server) {
       // Precompile and cache all matchers
+      let excludeMatchers: picomatch.Matcher[] | undefined;
+      if (options.exclude) {
+        excludeMatchers = toArray(options.exclude).map((p) => picomatch(p));
+      }
+
       const matchers = toArray(options.include).map((include, index) => {
         const pattern = path.resolve(path.join(include, '**/*.svg'));
 
         return {
           matcher: picomatch(pattern),
+          excludeMatchers,
           include,
           layerIndex: index,
         };

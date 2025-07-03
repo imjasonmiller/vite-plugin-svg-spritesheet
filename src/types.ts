@@ -71,14 +71,18 @@ interface SpritesheetTypesOptions {
 
 export interface PluginOptions {
   /**
-   * Directory or directories to include icons from.
-   * Accepts a single path or array of paths.
+   * Directory or directories to include. Accepts a single path or array of
+   * paths.
    */
-  include: string | string[];
+  readonly include: string | string[];
+  /**
+   * Files or directories to exclude
+   */
+  readonly exclude?: string | string[];
   /**
    * Path to which the generated spritesheet will be written.
    */
-  output: string;
+  readonly output: string;
   /**
    * A custom `id` attribute to be used as for each `<symbol />` tag.
    * Receives the parsed file path as input.
@@ -114,6 +118,7 @@ export interface ProcessSvgParams {
 
 export interface IncludeMatcher {
   matcher: Matcher;
+  excludeMatchers?: Matcher[];
   include: string;
   layerIndex: number;
 }
