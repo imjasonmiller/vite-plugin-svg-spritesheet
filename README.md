@@ -2,26 +2,31 @@
 
 ![npm version](https://img.shields.io/npm/v/vite-plugin-svg-spritesheet?style=flat) ![Build Status](https://img.shields.io/github/actions/workflow/status/imjasonmiller/vite-plugin-svg-spritesheet/ci.yml?style=flat) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-<img src="https://raw.githubusercontent.com/imjasonmiller/vite-plugin-svg-spritesheet/main/images/logo.png" alt="Logo" width="400"/>
+<img src="https://raw.githubusercontent.com/imjasonmiller/vite-plugin-svg-spritesheet/main/images/logo.png" alt="A playful logo for vite-plugin-svg-spritesheet featuring an S, V and G shape surrounded by glass tiles" width="400"/>
 
-**Type-safe, build-time SVG spritesheets for modern Vite projects**\
-Generate a single optimized spritesheet from your SVG sprites, with TypeScript type definitions, efficient caching, live reload support, and full control over configuration — all at build time, with no runtime overhead.
+**Type-safe, build-time SVG spritesheets for Vite projects**\
+Generate a single optimized spritesheet with automatic TypeScript definitions, directory-based overrides, optional CSS variable theming — all with zero runtime overhead.
 
-## Features
+## Why this plugin?
 
-- **Performance and efficiency:** Built entirely at build-time with no runtime dependencies, this plugin optimizes SVGs using SVGO, caches intelligently using content hashes, and scales well with batch processing.
+This plugin was built to support needs that I couldn't find in existing solutions:
 
-- **Developer experience:** Enjoy instant type-safe integration with generated TypeScript unions or enums, automatic live reload on file changes, and full control over SVGO config, symbol IDs, and TypeScript type generation. Optional color attribute replacement enables theming with `currentColor` and CSS fallbacks, without needing duplicate sprites.
+- **Layered directory overrides:** Use multiple directories with override priority, enabling clean layering (e.g. base icons overridden by custom sets).
+- **Theming without duplication:** Replaces `fill` and `color` with CSS variables using [`initial`](https://drafts.csswg.org/css-variables/#guaranteed-invalid) fallbacks, allowing flexible theming (like `currentColor`) without duplicating icons.
 
-- **Flexibility:** Sprites can be organized across multiple directories (e.g. `base/`, `theme/`, `custom/`). Later directories take precedence, allowing for clean overrides. Symbol IDs reflect directory structure by default, but can be customized.
+## Key benefits
 
-## Installation
+- **No runtime dependencies:** Output is generated during build, keeping bundles clean.
+- **Automatic type generation:** Ensures type safety and editor autocomplete.
+- **Directory-based overrides:** Supports clean layering of base and custom icons.
+- **Theming support:** Replaces static `fill` and `stroke` with CSS variables and fallbacks.
+- **Customizable symbol IDs:** Control naming with directory-aware defaults or custom functions.
+
+## Quick start
 
 ```bash
 npm install vite-plugin-svg-spritesheet --save-dev
 ```
-
-## Quick start
 
 ```typescript
 // vite.config.ts
@@ -79,6 +84,7 @@ Below are the configuration options available for `svgSpritesheet`:
 | Option                   | Type                           | Description                                                                |
 | ------------------------ | ------------------------------ | -------------------------------------------------------------------------- |
 | `include`                | `string \| string[]`           | Ordered list of directories to include. Later ones override earlier ones.  |
+| `exclude`                | `string \| string[]`           | Glob patterns for files or directories to exclude.                         |
 | `output`                 | `string`                       | Output path for the generated SVG spritesheet.                             |
 | `svgoConfig`             | `object`                       | [SVGO](https://svgo.dev/) configuration for optimization.                  |
 | `customSymbolId`         | `(path: ParsedPath) => string` | Custom function for the `id` attribute of the `<symbol>`.                  |
