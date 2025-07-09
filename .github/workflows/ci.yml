@@ -24,18 +24,21 @@ jobs:
 
       - name: 'Setup node'
         uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'pnpm'
 
       - name: 'Install'
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 'Formatting'
-        run: npm run format:check
+        run: pnpm run format:check
 
       - name: 'Lint'
-        run: npm run lint
+        run: pnpm run lint
 
       - name: 'Typecheck'
-        run: npm run typecheck
+        run: pnpm run typecheck
 
       - name: 'Test and coverage'
-        run: npm run coverage
+        run: pnpm run coverage
