@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.6.0
+
+### Minor Changes
+
+- 4411dda: Switch to pnpm
+
 ## 0.5.0
 
 ### Minor Changes
