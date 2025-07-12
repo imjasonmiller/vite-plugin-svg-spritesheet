@@ -19,9 +19,9 @@ importers:
       tinyglobby:
         specifier: ^0.2.14
         version: 0.2.14
-      vite:
-        specifier: ^7.0.0
-        version: 7.0.3(@types/node@22.16.2)(yaml@2.8.0)
+      ts-debounce:
+        specifier: ^4.0.0
+        version: 4.0.0
     devDependencies:
       '@changesets/cli':
         specifier: ^2.29.5
@@ -62,6 +62,9 @@ importers:
       unplugin-dts:
         specifier: ^1.0.0-beta.0
         version: 1.0.0-beta.3(@microsoft/api-extractor@7.52.8(@types/node@22.16.2))(esbuild@0.25.6)(rollup@4.44.2)(typescript@5.8.3)(vite@7.0.3(@types/node@22.16.2)(yaml@2.8.0))
+      vite:
+        specifier: ^7.0.0
+        version: 7.0.3(@types/node@22.16.2)(yaml@2.8.0)
       vitest:
         specifier: ^3.2.3
         version: 3.2.4(@types/node@22.16.2)(yaml@2.8.0)
@@ -2941,6 +2944,12 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4'
 
+  ts-debounce@4.0.0:
+    resolution:
+      {
+        integrity: sha512-+1iDGY6NmOGidq7i7xZGA4cm8DAa6fqdYcvO5Z6yBevH++Bdo9Qt/mN0TzHUgcCcKv1gmh9+W5dHqz8pMWbCbg==,
+      }
+
   type-check@0.4.0:
     resolution:
       {
@@ -4900,6 +4909,8 @@ snapshots:
   ts-api-utils@2.1.0(typescript@5.8.3):
     dependencies:
       typescript: 5.8.3
+
+  ts-debounce@4.0.0: {}
 
   type-check@0.4.0:
     dependencies:
