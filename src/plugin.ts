@@ -2,7 +2,7 @@ import path from 'path';
 import { glob } from 'tinyglobby';
 import picomatch from 'picomatch';
 import { XMLParser, XMLBuilder, type X2jOptions } from 'fast-xml-parser';
-import { debounce } from './helpers/debounce';
+import { debounce } from 'ts-debounce';
 import { writeSpritesheet } from './helpers/spritesheet';
 import { processSvg } from './core/processSvg';
 
@@ -19,13 +19,10 @@ import { normalizeError } from './helpers/error';
 import { isDirectory, assertWritablePath } from './helpers/fs';
 import { toArray } from './helpers/options';
 
-const debouncedWriteSpriteSheet = debounce(
-  async (args: SvgSpritesheetPluginContext) => {
-    await writeSpritesheet(args);
-  },
-  500,
-  { leading: true, trailing: true }
-);
+const debouncedWriteSpriteSheet = debounce(writeSpritesheet, 500, {
+  isImmediate: true,
+  maxWait: 500,
+});
 
 async function handleFileEvent(
   context: SvgSpritesheetPluginContext,
@@ -61,7 +58,7 @@ async function handleFileEvent(
           break;
       }
 
-      debouncedWriteSpriteSheet(context);
+      await debouncedWriteSpriteSheet(context);
     }
   }
 }
