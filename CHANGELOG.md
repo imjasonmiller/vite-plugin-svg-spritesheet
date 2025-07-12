@@ -1,5 +1,16 @@
 # vite-plugin-svg-spritesheet
 
+## 0.6.0
+
+### Minor Changes
+
+- b23143a: Allow Vite 6 as valid for `peerDependencies`
+- 4411dda: Switch to pnpm
+
+### Patch Changes
+
+- b23143a: Swap "We have debounce at home" out for `ts-debounce`
+
 ## 0.5.0
 
 ### Minor Changes
