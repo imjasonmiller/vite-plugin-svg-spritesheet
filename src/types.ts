@@ -87,7 +87,7 @@ export interface PluginOptions {
    * A custom `id` attribute to be used as for each `<symbol />` tag.
    * Receives the parsed file path as input.
    */
-  customSymbolId?: (path: ParsedPath) => string;
+  customSymbolId?: (filePath: string, parsedPath: ParsedPath) => string;
   /**
    * Optional SVGO configuration object for optimization of SVGs.
    * @default undefined

@@ -39,7 +39,7 @@ export async function processSvg({
     }
 
     const spriteId = context.options.customSymbolId
-      ? context.options.customSymbolId(parsedRelativePath)
+      ? context.options.customSymbolId(relativeToInclude, parsedRelativePath)
       : defaultSymbolId(parsedRelativePath);
 
     const svg = optimizeSvg(context, file, filePath);
