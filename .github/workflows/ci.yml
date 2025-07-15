@@ -7,10 +7,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  setup:
-    name: Setup & Install
-
-  test:
+  test-matrix:
     name: CI
 
     strategy:
