@@ -1,5 +1,16 @@
 # vite-plugin-svg-spritesheet
 
+## 0.7.0
+
+### Minor Changes
+
+- 35693f8: Pass relative string path from include to config `symbolId` next to parsed path
+
+### Patch Changes
+
+- 35693f8: Use SHA-256 for hashing files
+- 35693f8: Fix `generateEnum` member not using `spriteId`
+
 ## 0.6.0
 
 ### Minor Changes
