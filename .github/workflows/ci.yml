@@ -7,8 +7,11 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  setup:
+    name: Setup & Install
+
   test:
-    name: Test plugin
+    name: CI
 
     strategy:
       matrix:
@@ -19,31 +22,36 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: 'Checkout repository'
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: 'Install pnpm'
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: 'Setup node'
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: 'pnpm'
 
-      - name: 'Install'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 'Formatting'
+      - name: Format check
         run: pnpm run format:check
 
-      - name: 'Lint'
+      - name: Lint
         run: pnpm run lint
 
-      - name: 'Typecheck'
+      - name: Typecheck
         run: pnpm run typecheck
 
-      - name: 'Test and coverage'
+      - name: Run tests with coverage
         run: pnpm run coverage
