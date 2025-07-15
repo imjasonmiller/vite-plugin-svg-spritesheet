@@ -32,7 +32,7 @@ describe('svgSpritesheet plugin (integration)', () => {
       plugins: [
         svgSpritesheet({
           include: fixturesDir,
-          exclude: ['icon-c.svg', 'nested/icon-d.svg'],
+          exclude: ['c.svg', 'nested/d.svg'],
           output: spritePath,
         }),
       ],
@@ -51,10 +51,10 @@ describe('svgSpritesheet plugin (integration)', () => {
     expect(content).toMatchSnapshot();
 
     // Check that all icon names are in the sprite
-    expect(content).toContain('icon-a');
-    expect(content).toContain('icon-b');
-    expect(content).not.toContain('icon-c');
-    expect(content).not.toContain('nested-icon-d');
+    expect(content).toContain('id="icon-a"');
+    expect(content).toContain('id="icon-b"');
+    expect(content).not.toContain('id="icon-c"');
+    expect(content).not.toContain('id="nested-icon-d"');
   });
 
   it('generates a spritesheet from fixture SVGs', async () => {
@@ -85,9 +85,9 @@ describe('svgSpritesheet plugin (integration)', () => {
     expect(content).toMatchSnapshot();
 
     // Check that all icon names are in the sprite
-    expect(content).toContain('icon-a');
-    expect(content).toContain('icon-b');
-    expect(content).toContain('icon-c');
-    expect(content).toContain('nested-icon-d');
+    expect(content).toContain('id="icon-a"');
+    expect(content).toContain('id="icon-b"');
+    expect(content).toContain('id="icon-c"');
+    expect(content).toContain('id="icon-nested-d"');
   });
 });

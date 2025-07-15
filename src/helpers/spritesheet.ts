@@ -34,9 +34,9 @@ export function generateEnum(
   name = 'IconName'
 ): (spriteMap: SpriteMap) => string {
   return (spriteMap: SpriteMap): string => {
-    const members = Array.from(spriteMap.keys(), (key) => {
-      const enumKey = toEnumKey(key);
-      const enumValue = toEnumValue(key);
+    const members = Array.from(spriteMap.values(), ({ spriteId }) => {
+      const enumKey = toEnumKey(spriteId);
+      const enumValue = toEnumValue(spriteId);
       return `  ${enumKey} = "${enumValue}"`;
     }).join(',\n');
 
