@@ -7,8 +7,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  test:
-    name: Test plugin
+  test-matrix:
+    name: CI
 
     strategy:
       matrix:
@@ -19,31 +19,28 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: 'Checkout repository'
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: 'Install pnpm'
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10
 
-      - name: 'Setup node'
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: 'pnpm'
 
-      - name: 'Install'
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 'Formatting'
+      - name: Format check
         run: pnpm run format:check
 
-      - name: 'Lint'
+      - name: Lint
         run: pnpm run lint
 
-      - name: 'Typecheck'
+      - name: Typecheck
         run: pnpm run typecheck
 
-      - name: 'Test and coverage'
+      - name: Run tests with coverage
         run: pnpm run coverage
