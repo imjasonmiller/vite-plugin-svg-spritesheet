@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { computeHash } from '../hash';
 import { isProcessingSkipped } from './isProcessingSkipped';
-import { defaultSymbolId } from './symbolId';
+import { defaultSymbolId, getFullSymbolId } from './symbolId';
 import { normalizeError } from '../helpers/error';
 import { replaceColorAttrsWithCssVars } from '../helpers/svg/transform';
 import { optimizeSvg } from '../helpers/svg/optimizer';
@@ -38,9 +38,16 @@ export async function processSvg({
       return;
     }
 
-    const spriteId = context.options.customSymbolId
-      ? context.options.customSymbolId(relativeToInclude, parsedRelativePath)
+    const symbolPrefix = context.options.symbolId?.prefix ?? 'icon';
+    const symbolId = context.options.symbolId?.id
+      ? context.options.symbolId.id(relativeToInclude, parsedRelativePath)
       : defaultSymbolId(parsedRelativePath);
+
+    const baseSpriteId = { prefix: symbolPrefix, id: symbolId };
+    const spriteId = {
+      ...baseSpriteId,
+      full: getFullSymbolId(baseSpriteId),
+    };
 
     const svg = optimizeSvg(context, file, filePath);
     let svgObj = parseSvg(context, svg, filePath);
@@ -64,7 +71,7 @@ export async function processSvg({
       svgObj = replaced;
     }
 
-    const spriteSymbol = transformSvgToSymbol(svgObj, spriteId);
+    const spriteSymbol = transformSvgToSymbol(svgObj, spriteId.full);
     if (!spriteSymbol) {
       context.logger.warn(
         `Symbol conversion failed for file: "${filePath}". Skipping.`

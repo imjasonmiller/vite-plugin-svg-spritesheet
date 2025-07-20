@@ -81,16 +81,17 @@ You can also pass a custom function to generateTypes to control the output forma
 
 Below are the configuration options available for `svgSpritesheet`:
 
-| Option                   | Type                           | Description                                                                |
-| ------------------------ | ------------------------------ | -------------------------------------------------------------------------- |
-| `include`                | `string \| string[]`           | Ordered list of directories to include. Later ones override earlier ones.  |
-| `exclude`                | `string \| string[]`           | Glob patterns for files or directories to exclude.                         |
-| `output`                 | `string`                       | Output path for the generated SVG spritesheet.                             |
-| `svgoConfig`             | `object`                       | [SVGO](https://svgo.dev/) configuration for optimization.                  |
-| `customSymbolId`         | `(path: ParsedPath) => string` | Custom function for the `id` attribute of the `<symbol>`.                  |
-| `replaceColorAttributes` | `boolean`                      | Replaces `fill` and `stroke` with CSS variables for `currentColor` support |
-| `types.output`           | `string`                       | Path for the generated TypeScript types.                                   |
-| `types.generateTypes`    | `(map: SpriteMap) => string`   | Function that receives the sprite map and can return TypeScript types.     |
+| Option                   | Type                                                   | Description                                                                                                                                                |
+| ------------------------ | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `include`                | `string \| string[]`                                   | Ordered list of directories to include. Later ones override earlier ones.                                                                                  |
+| `exclude`                | `string \| string[]`                                   | Glob patterns for files or directories to exclude.                                                                                                         |
+| `output`                 | `string`                                               | Output path for the generated SVG spritesheet.                                                                                                             |
+| `svgoConfig`             | `object`                                               | [SVGO](https://svgo.dev/) configuration for optimization.                                                                                                  |
+| `symbolId.prefix`        | `string`                                               | Prefix prepended to all symbol IDs. Defaults to "icon".                                                                                                    |
+| `symbolId.id`            | `(filePath: string, parsedPath: ParsedPath) => string` | Custom function for the `id` attribute of the `<symbol>`.                                                                                                  |
+| `replaceColorAttributes` | `boolean`                                              | Replaces `fill` and `stroke` with a CSS variable for `currentColor` support. See the [examples](#available-examples) for this in action.                   |
+| `types.output`           | `string`                                               | Path for the generated TypeScript types.                                                                                                                   |
+| `types.generateTypes`    | `(map: SpriteMap) => string`                           | Function that receives the sprite map and can return TypeScript types. The exported `generateEnum` and `generateStringUnion` functions can be used as well |
 
 ## Framework integration
 

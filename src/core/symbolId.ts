@@ -11,7 +11,7 @@ import type { ParsedPath } from 'path';
  * across nested file structures while remaining readable and deterministic.
  *
  * @example
- * defaultSymbolId(path.parse('social/email.svg')); // "icon-social-email"
+ * defaultSymbolId(path.parse('social/email.svg')); // "social-email"
  *
  * @param parsedPath - The parsed file path object
  * @returns The string to be used for the symbol's `id` attribute
@@ -22,5 +22,17 @@ import type { ParsedPath } from 'path';
 export function defaultSymbolId(parsedPath: ParsedPath): string {
   const dirParts = parsedPath.dir.split(path.sep).filter(Boolean);
 
-  return ['icon', ...dirParts, parsedPath.name].join('-');
+  return [...dirParts, parsedPath.name].join('-');
+}
+
+const leadingHyphen = /^-+/g;
+
+export function getFullSymbolId({
+  prefix,
+  id,
+}: {
+  prefix: string;
+  id: string;
+}): string {
+  return [prefix, id].filter(Boolean).join('-').replace(leadingHyphen, '');
 }
