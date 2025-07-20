@@ -17,7 +17,7 @@ export function generateStringUnion(
 ): (spriteMap: SpriteMap) => string {
   return (spriteMap: SpriteMap): string => {
     const members = Array.from(spriteMap.values(), ({ spriteId }) => {
-      return `  | "${spriteId}"`;
+      return `  | "${spriteId.full}"`;
     }).join('\n');
 
     return `${GENERATED_FILE_HEADER}\n\nexport type ${name} =\n${members};`;
@@ -35,8 +35,8 @@ export function generateEnum(
 ): (spriteMap: SpriteMap) => string {
   return (spriteMap: SpriteMap): string => {
     const members = Array.from(spriteMap.values(), ({ spriteId }) => {
-      const enumKey = toEnumKey(spriteId);
-      const enumValue = toEnumValue(spriteId);
+      const enumKey = toEnumKey(spriteId.id);
+      const enumValue = toEnumValue(spriteId.full);
       return `  ${enumKey} = "${enumValue}"`;
     }).join(',\n');
 
@@ -74,7 +74,7 @@ export async function writeSpritesheet({
 }: SvgSpritesheetPluginContext): Promise<void> {
   // Sort map in order for the output to be deterministic
   const sortedSpriteMap = sortMap(spriteMap, ([, a], [, b]) => {
-    return a.spriteId.localeCompare(b.spriteId);
+    return a.spriteId.full.localeCompare(b.spriteId.full);
   });
 
   const spritesheetSvg = buildSpritesheet(sortedSpriteMap);

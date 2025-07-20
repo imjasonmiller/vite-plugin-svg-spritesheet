@@ -1,4 +1,4 @@
-import { optimize } from 'svgo';
+import { optimize as svgoOptimize } from 'svgo';
 import { normalizeError } from '../error';
 
 import type { SvgSpritesheetPluginContext } from '../../types';
@@ -17,7 +17,7 @@ export function optimizeSvg(
   }
 
   try {
-    const optimized = optimize(content, { ...svgoConfig, path: filePath });
+    const optimized = svgoOptimize(content, { ...svgoConfig, path: filePath });
 
     if ('data' in optimized && optimized.data.length) {
       return optimized.data;

@@ -45,13 +45,13 @@ export type FilePath = string;
 export type SpriteMap = Map<FilePath, SpriteMapEntry>;
 
 export interface SpriteMapEntry {
-  spriteId: string;
+  spriteId: { prefix: string; id: string; full: string };
   spriteString: string;
   layerIndex: number;
   hash: string;
 }
 
-interface SpritesheetTypesOptions {
+interface TypesOptions {
   output: string;
   /**
    * Generates TypeScript types by passing a callback receiving the
@@ -69,6 +69,30 @@ interface SpritesheetTypesOptions {
   generateTypes?: (spriteMap: SpriteMap) => string;
 }
 
+export interface SymbolIdOptions {
+  /**
+   * Optional prefix prepended to all symbol IDs.
+   *
+   * Defaults to `"icon"`. Set to an empty string to omit the prefix.
+   *
+   * @example
+   * // File: icons/16/edit.svg
+   * prefix: "icon" // "icon-16-edit"
+   * prefix: ""     // "16-edit"
+   */
+  prefix?: string;
+
+  /**
+   * Custom function to generate the base part of each symbol ID (excluding the prefix).
+   *
+   * By default, the ID is generated from the file’s relative path:
+   * subdirectories + filename, joined by hyphens.
+   *
+   * @returns A string representing the base ID (e.g. "16-edit")
+   */
+  id?: (filePath: string, parsedPath: ParsedPath) => string;
+}
+
 export interface PluginOptions {
   /**
    * Directory or directories to include. Accepts a single path or array of
@@ -84,10 +108,17 @@ export interface PluginOptions {
    */
   readonly output: string;
   /**
-   * A custom `id` attribute to be used as for each `<symbol />` tag.
-   * Receives the parsed file path as input.
+   * Configure how `<symbol>` IDs are generated.
+   *
+   * These IDs are used as the `id` attribute in the SVG sprite and are
+   * referenced via `<use xlink:href="#id" />`.
+   *
+   * If not customized, the default format is:
+   *   `"icon-[subdir]-[filename]"`
+   *
+   * Use this to customize the `id` format for improved naming, consistency, or integration with design systems.
    */
-  customSymbolId?: (filePath: string, parsedPath: ParsedPath) => string;
+  symbolId?: SymbolIdOptions;
   /**
    * Optional SVGO configuration object for optimization of SVGs.
    * @default undefined
@@ -96,7 +127,7 @@ export interface PluginOptions {
   /**
    * Optional TypeScript types generation settings.
    */
-  types?: SpritesheetTypesOptions;
+  types?: TypesOptions;
   /**
    * Number of files to process in parallel batches.
    * @default 20

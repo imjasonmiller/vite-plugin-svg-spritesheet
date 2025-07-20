@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
+import { ref } from 'vue';
 import Icon from './components/Icon.vue';
 
 const color = ref('initial');
