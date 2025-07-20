@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.7.1
+
+### Patch Changes
+
+- 017d35a: Fix enum type generation by removing `prefix` from member name
+
 ## 0.7.0
 
 ### Minor Changes
