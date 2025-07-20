@@ -69,9 +69,9 @@ The plugin supports automatic type generation, enabling editor autocomplete and 
 export type IconName = 'icon-sm-add' | 'icon-md-delete' | 'icon-lg-change';
 
 export enum IconName {
-  ICON_SM_ADD = 'icon-sm-add',
-  ICON_MD_DELETE = 'icon-md-delete',
-  ICON_LG_CHANGE = 'icon-lg-change',
+  SM_ADD = 'icon-sm-add',
+  MD_DELETE = 'icon-md-delete',
+  LG_CHANGE = 'icon-lg-change',
 }
 ```
 
