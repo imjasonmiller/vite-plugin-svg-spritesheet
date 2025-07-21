@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.7.2
+
+### Patch Changes
+
+- 0c7fd1b: Remove double file paths for custom symbol id function
+
 ## 0.7.1
 
 ### Patch Changes
