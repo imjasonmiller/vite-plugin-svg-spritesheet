@@ -1,4 +1,3 @@
-import type { ParsedPath } from 'path';
 import { type Config as SvgoConfig } from 'svgo';
 import type { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import type { Matcher } from 'picomatch';
