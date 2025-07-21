@@ -90,7 +90,7 @@ export interface SymbolIdOptions {
    *
    * @returns A string representing the base ID (e.g. "16-edit")
    */
-  id?: (filePath: string, parsedPath: ParsedPath) => string;
+  id?: (filePath: string) => string;
 }
 
 export interface PluginOptions {

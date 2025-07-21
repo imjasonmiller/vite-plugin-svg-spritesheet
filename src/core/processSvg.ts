@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { computeHash } from '../hash';
+import { computeHash } from '../helpers/hash';
 import { isProcessingSkipped } from './isProcessingSkipped';
 import { defaultSymbolId, getFullSymbolId } from './symbolId';
 import { normalizeError } from '../helpers/error';
@@ -40,7 +40,7 @@ export async function processSvg({
 
     const symbolPrefix = context.options.symbolId?.prefix ?? 'icon';
     const symbolId = context.options.symbolId?.id
-      ? context.options.symbolId.id(relativeToInclude, parsedRelativePath)
+      ? context.options.symbolId.id(relativeToInclude)
       : defaultSymbolId(parsedRelativePath);
 
     const baseSpriteId = { prefix: symbolPrefix, id: symbolId };
