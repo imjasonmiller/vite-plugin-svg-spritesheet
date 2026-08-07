@@ -4,6 +4,17 @@
 
 ### Minor Changes
 
+- 73cb284: Add `vite@8` support
+
+### Patch Changes
+
+- 73cb284: add back in @microsoft/api-extractor dep
+- 73cb284: fix pnpm/node version in ci and update actions
+
+## 0.8.0
+
+### Minor Changes
+
 - 4382659: Add `vite@8` support
 
 ### Patch Changes
