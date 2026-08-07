@@ -1,5 +1,11 @@
 # vite-plugin-svg-spritesheet
 
+## 0.8.1
+
+### Patch Changes
+
+- 36cd3ad: update package versions for examples
+
 ## 0.8.0
 
 ### Minor Changes
