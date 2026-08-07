@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vite-plugin-svg-spritesheet": "^0.7.2",
+    "vite-plugin-svg-spritesheet": "^0.8.0",
     "vue": "^3.5.40"
   },
   "devDependencies": {
