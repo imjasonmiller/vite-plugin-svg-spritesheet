@@ -1,5 +1,15 @@
 # vite-plugin-svg-spritesheet
 
+## 0.8.0
+
+### Minor Changes
+
+- 4382659: Add `vite@8` support
+
+### Patch Changes
+
+- 4382659: fix pnpm/node version in ci and update actions
+
 ## 0.7.2
 
 ### Patch Changes
