@@ -1,0 +1,11 @@
+packages:
+  - '.'
+  - '!examples/**'
+
+allowBuilds:
+  esbuild: true
+
+minimumReleaseAge: 10080
+
+publicHoistPattern:
+  - '*prettier*'

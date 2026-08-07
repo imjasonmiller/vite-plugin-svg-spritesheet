@@ -9,14 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vite-plugin-svg-spritesheet": "^0.4.1",
-    "vue": "^3.5.17"
+    "vite-plugin-svg-spritesheet": "^0.7.2",
+    "vue": "^3.5.40"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.0",
-    "@vue/tsconfig": "^0.7.0",
-    "typescript": "~5.8.3",
-    "vite": "^7.0.0",
-    "vue-tsc": "^2.2.10"
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/tsconfig": "^0.9.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.2.0",
+    "vue-tsc": "^3.3.8"
   }
 }
